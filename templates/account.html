@@ -1,0 +1,325 @@
+{% extends "base_two.html" %}
+{% block title %}Doctor's Account management{% endblock %}
+
+{% block content %}
+
+<!-- Main Content -->
+<div class="account-content">
+    <h2 class="main-heading">Account</h2>
+    <!-- Accordion -->
+    <div class="accordion" id="settingsAccordion">
+        <!-- Profile Section -->
+        <div class="accordion-item" id="account_profile">
+            <h2 class="accordion-header" id="profileHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#profile" aria-expanded="true" aria-controls="profile">
+                    Profile
+                </button>
+            </h2>
+            <div id="profile" class="accordion-collapse collapse show" aria-labelledby="profileHeading" data-bs-parent="#settingsAccordion">
+                <div class="accordion-body text-center">
+
+                    <!-- Sidebar Display Info -->
+                    <h6 class="text-muted mb-3">This is what is displayed in the sidebar</h6>
+                    <form class="d-flex justify-content-center align-items-center mb-4 gap-3 flex-wrap" method="POST" action="{{ url_for('profile_picture') }}" enctype="multipart/form-data">
+                        <!-- Hidden input for remove picture action -->
+                        <input type="hidden" name="remove_picture" id="remove_picture" value="">
+                        <!-- Profile Picture -->
+                        <div class="mb-3 position-relative">
+                            {% if user.profile_picture %}
+                            <img id="profilePicture" src="{{ url_for('static', filename='uploads/profile_pictures/' + user.profile_picture) }}" alt="Profile Picture" class="rounded-circle img-thumbnail shadow" style="width: 150px; height: 150px;">
+                            {% else %}
+                            <img id="profilePictureDefault" src="https://via.placeholder.com/150" alt="Profile Picture" class="rounded-circle img-thumbnail shadow" style="width: 150px; height: 150px;">
+                            {% endif %}
+                            <input type="file" id="profilePictureInput" name="profile_picture" class="d-none" accept="image/*" onchange="previewImage(event)">
+                            <button type="button" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; right: 10px;" onclick="document.getElementById('profilePictureInput').click()">Edit</button>
+                        </div>
+
+                        <!-- Name and Title Form -->
+                        <div>
+                            <label for="title" class="form-label">Title:</label>
+                            <input type="text" class="form-control text-center" id="title" name="title" value="{{ user.title }}" style="width: 200px;" placeholder="E.g., Dr., Mr., Ms.">
+                        </div>
+                        <div>
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" class="form-control text-center" id="name" name="name" value="{{ user.name }}" style="width: 200px;" placeholder="Enter full name">
+                        </div>
+
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-primary" type="submit"> Save Changes</button>
+                        <button class="btn btn-outline-danger" type="button" onclick="confirmRemoveProfilePicture()">Remove Picture</button>
+
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Personal and Contact information Section -->
+        <div class="accordion-item" id="personal_contact_info">
+            <h2 class="accordion-header" id="personalHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personal" aria-expanded="false" aria-controls="personal">
+                    Personal and Contact Information
+                </button>
+            </h2>
+            <div id="personal" class="accordion-collapse collapse show" aria-labelledby="personalHeading" data-bs-parent="#settingsAccordion">
+                <div class="accordion-body">
+                    <form id="personalForm" method="POST" action="{{ url_for('personal_contact_information') + '#personal_contact_info' }}">
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="firstName" class="col-form-label">First Name:</label>
+                                    <input type="text" class="form-control" id="firstName" name="first_name" value="{{ user.first_name }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="middleName" class="col-form-label">Middle Name:</label>
+                                    <input type="text" class="form-control" id="middleName" name="middle_name" value="{{ user.middle_name }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lastName" class="col-form-label">Last Name:</label>
+                                    <input type="text" class="form-control" id="lastName" name="last_name" value="{{ user.last_name }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="gender" class="col-form-label">Gender:</label>
+                                    <select class="form-control" id="gender" name="gender" {% if not edit_mode %}disabled{% endif %}>
+                                        <option value="Male" {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+                                        <option value="Female" {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+                                        <option value="Other" {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Second Column -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="dob" class="col-form-label">Date of Birth:</label>
+                                    <input type="date" class="form-control" id="dob"  name="dob" value="{{ user.dob }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="email" name="email" value="{{ user.email }}" readonly disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telecom1" class="col-form-label">Telecom 1:</label>
+                                    <input type="text" class="form-control" id="telecom1" name="telecom1" value="{{ user.telecom1 }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telecom2" class="col-form-label">Telecom 2:</label>
+                                    <input type="text" class="form-control" id="telecom2" name="telecom2" value="{{ user.telecom2 }}" disabled>
+                                </div>
+                            </div>
+
+                            <!-- Third Column -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="currentHomeAddress" class="col-form-label">Current Home Address:</label>
+                                    <textarea class="form-control" id="currentHomeAddress" rows="3"name="current_home_address" disabled>{{ user.current_home_address }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="permanentHomeAddress" class="col-form-label">Permanent Home Address:</label>
+                                    <textarea class="form-control" id="permanentHomeAddress"  name="permanent_home_address" rows="3" disabled>{{ user.permanent_home_address }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact section -->
+                        <h4 class="mt-4">Emergency Contact</h4>
+                        <div class="row">
+                            <!-- first column -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="emergencyContactFirstName" class="col-form-label">First Name:</label>
+                                    <input type="text" class="form-control" id="emergencyContactFirstName"  name="emergency_contact_first_name" value="{{ doc_emergency_contact.first_name if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactMiddleName" class="col-form-label">Middle Name:</label>
+                                    <input type="text" class="form-control" id="emergencyContactMiddleName" name="emergency_contact_middle_name" value="{{ doc_emergency_contact.middle_name if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactLastName" class="col-form-label">Last Name:</label>
+                                    <input type="text" class="form-control" id="emergencyContactLastName" name="emergency_contact_last_name" value="{{ doc_emergency_contact.last_name if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                        <label for="emergencyContactRelationship" class="col-form-label">Relationship:</label>
+                                        <input class="form-control" id="emergencyContactRelationship" name="emergency_contact_relation" value="{{ doc_emergency_contact.relation if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                            </div>
+
+                            <!-- Second column -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="emergencyContactGender" class="col-form-label">Gender</label>
+                                    <select class="form-select" id="emergencyContactGender" name="emergency_contact_gender" {% if not edit_mode %}disabled{% endif %}>
+                                        <option value="Male" {% if doc_emergency_contact and doc_emergency_contact.gender == 'Male' %}selected{% endif %}>Male</option>
+                                        <option value="Female" {% if doc_emergency_contact and doc_emergency_contact.gender == 'Female' %}selected{% endif %}>Female</option>
+                                        <option value="Other" {% if doc_emergency_contact and doc_emergency_contact.gender == 'Other' %}selected{% endif %}>Other</option>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactDob" class="col-form-label">Date of Birth:</label>
+                                    <input type="date" class="form-control" id="emergencyContactDob" name="emergency_contact_dob" value="{{ doc_emergency_contact.dob if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactEmail" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="emergencyContactEmail"  name="emergency_contact_email" value="{{ doc_emergency_contact.email if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactTelecom" class="col-form-label">Telecom:</label>
+                                    <input type="text" class="form-control" id="emergencyContactTelecom" name="emergency_contact_telecom" value="{{ doc_emergency_contact.telecom if doc_emergency_contact else '' }}"  disabled>
+                                </div>
+                            </div>
+
+                            <!-- Third Column -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="emergencyContactAddress" class="col-form-label">Address:</label>
+                                    <textarea class="form-control" id="emergencyContactAddress" rows="3" name="emergency_contact_address" disabled>{{ doc_emergency_contact.address if doc_emergency_contact else '' }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="emergencyContactValidity" class="col-form-label">Validity of Contact:</label>
+                                    <input type="text" class="form-control" id="emergencyContactValidity" name="emergency_contact_validity_of_contact" value="{{ doc_emergency_contact.validity_of_contact if doc_emergency_contact else '' }}" disabled>
+                                </div>
+                            </div>
+
+                        </div>
+                         <div class="button-container mt-3">
+                            <button type="button" class="btn btn-secondary" data-enable-edit="personal">Edit</button>
+                            <button type="button" class="btn btn-secondary" data-cancel-edit="personal" disabled>Cancel</button>
+                            <button type="submit" class="btn btn-primary" disabled>Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Information Section -->
+        <div class="accordion-item" id="professional_information">
+            <h2 class="accordion-header d-flex align-items-center justify-content-between" id="professionalHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#professional" aria-expanded="false" aria-controls="professional">
+                    Professional Information
+                </button>
+            </h2>
+            <div id="professional" class="accordion-collapse collapse show" aria-labelledby="professionalHeading" data-bs-parent="#settingsAccordion">
+                <div class="accordion-body">
+                    <form id="professionalForm" method="POST" action="{{ url_for('professional_information') + '#professional_information' }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="licenseNumber" class="col-form-label">License Number:</label>
+                                    <input type="text" class="form-control" id="licenseNumber"  name="license_number" value="{{ user.license_number }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="department" class="col-form-label">Department:</label>
+                                    <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="specialization" class="col-form-label">Specialization:</label>
+                                    <input type="text" class="form-control" id="specialization"  name="specialization" value="{{ user.specialization }}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-container mt-3">
+                            <button type="button" class="btn btn-secondary" data-enable-edit="professional">Edit</button>
+                            <button type="button" class="btn btn-secondary" data-cancel-edit="professional" disabled>Cancel</button>
+                            <button type="submit" class="btn btn-primary" disabled>Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Section -->
+        <div class="accordion-item" id="security">
+            <h2 class="accordion-header" id="passwordHeading">
+                <button class="accordion-button " type="button" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#password" aria-expanded="false" aria-controls="password">
+                    Password Management
+                </button>
+            </h2>
+            <div id="password" class="accordion-collapse collapse show" aria-labelledby="passwordHeading" data-bs-parent="#settingsAccordion">
+                <div class="accordion-body">
+                    <form id="passwordForm"  action="{{ url_for('password_management') }}" method="POST" autocomplete="off">
+                        <h4>Change Password</h4>
+                        <div class="row mb-3">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="col-form-label">Current Password:</label>
+                                <input type="password" class="form-control" id="currentPassword" name="current_password" autocomplete="current-password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="col-form-label">New Password:</label>
+                                <input type="password" class="form-control" id="newPassword" name="new_password" autocomplete="new_password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="col-form-label">Confirm Password:</label>
+                                <input type="password" class="form-control" id="confirmPassword" autocomplete="confirm_password" required>
+                            </div>
+                            <div class="form-check mt-3">
+                                <input type="checkbox" class="form-check-input" id="show_password">
+                                <label class="form-check-label" for="show_password">Show Password</label>
+                            </div>
+                        </div>
+                        <ul>
+                            <li id="length-rule" class="invalid">At least 8 characters</li>
+                            <li id="uppercase-rule" class="invalid">At least one uppercase letter</li>
+                            <li id="number-rule" class="invalid">At least one number</li>
+                            <li id="special-char-rule" class="invalid">At least one special character</li>
+                        </ul>
+
+                        <!-- Save Button for Password Change -->
+                        <div class="button-container mt-3">
+                            <button type="submit" class="btn btn-primary"  id="update-btn" disabled>Update Password</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Account Section -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="deleteHeading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#delete" aria-expanded="false" aria-controls="delete">
+                    Account Deletion
+                </button>
+            </h2>
+            <div id="delete" class="accordion-collapse collapse show" aria-labelledby="deleteHeading" data-bs-parent="#settingsAccordion">
+                <div class="accordion-body">
+                    <p>Do you want to delete your account? Click the button below to proceed.</p>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Account Deletion</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Deleting Account -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>This action is not reversible. Are you sure you want to delete your account?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <form action="{{ url_for('delete_account') }}" method="POST">
+                            <button type="submit" class="btn btn-danger">Yes, I am sure</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='account.js') }}"></script>
+{% endblock %}

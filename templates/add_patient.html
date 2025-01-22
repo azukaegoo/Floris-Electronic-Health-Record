@@ -1,0 +1,276 @@
+{% extends "base_two.html" %}
+{% block title %}{{ 'Edit' if patient else 'Add' }} Patient{% endblock %}
+
+{% block content %}
+
+ <div class="patient-content">
+     <!-- Accordion Structure -->
+     <div class="accordion" id="formAccordion">
+         <!-- Card/Accordion Body -->
+         <div class="accordion-item">
+             <h2 class="accordion-header" id="headingOne">
+                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                     Patient Information Form
+                 </button>
+             </h2>
+             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#formAccordion">
+                 <div class="accordion-body">
+                     <h2>{{ 'Edit' if patient else 'Add' }}</h2>
+                     <!-- Form -->
+                     <form id="patientInfoForm" class="patient-form"  method="POST" enctype="multipart/form-data"  action="{{ url_for('add_or_edit_patient', patient_id=patient.id if patient else None) }}">
+                         <!-- Patient Information Section -->
+                         <h4 class="mt-4">Patient Information</h4>
+                         <div class="row">
+                             <div class="col-md-4">
+
+                                <!-- Upload Photo Section -->
+                                <div class="mb-3">
+                                    <div class="patient-upload-photo">
+                                        <!-- Clickable Thumbnail -->
+                                        <img src="{{ url_for('static', filename='uploads/profile_pictures/' + patient.photo) if patient and patient.photo else 'https://via.placeholder.com/150' }}"
+                                             alt="Upload"
+                                             id="photoPreview"
+                                             class="img-thumbnail"
+                                             style="cursor: pointer; width: 150px; height: 150px;"
+                                             data-bs-toggle="modal"
+                                             data-bs-target="#imageModal">
+                                    </div>
+                                    <label for="uploadPhoto" class="form-label">Upload Photo:</label>
+                                    <input type="file" class="form-control" id="uploadPhoto" name="photo" accept="image/*">
+                                </div>
+
+                                <!-- Modal for Full-Size Image -->
+                                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageModalLabel">Full Image Preview</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img id="fullImagePreview" src="{{ url_for('static', filename='uploads/profile_pictures/' + patient.photo) if patient and patient.photo else 'https://via.placeholder.com/150' }}" alt="Full Preview" class="img-fluid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                 <div class="mb-3">
+                                     <label for="languagePreferred" class="form-label mt-2">Language Preferred:</label>
+                                     <input type="text" class="form-control" id="languagePreferred" name="language_preferred" value="{{ patient.language_preferred }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="firstName" class="form-label">First Name:</label>
+                                     <input type="text" class="form-control" id="firstName" name="first_name" value="{{ patient.first_name }}" required placeholder="Enter first name" disabled>
+                                </div>
+
+                                 <div class="mb-3">
+                                     <label for="middleName" class="form-label mt-2">Middle Name:</label>
+                                     <input type="text" class="form-control" id="middleName" name="middle_name" value="{{ patient.middle_name }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="lastName" class="form-label mt-2">Last Name:</label>
+                                     <input type="text" class="form-control" id="lastName" name="last_name" value="{{ patient.last_name }}" disabled>
+                                 </div>
+                             </div>
+
+                             <!-- Age Section beside Upload -->
+                             <div class="col-md-4" >
+                                 <div class="mb-3">
+                                     <label for="gender" class="form-label mt-2">Gender:</label>
+                                     <select class="form-select" id="gender" name="gender" disabled>
+                                         <option value="male" {% if patient.gender == 'male' %} selected {% endif %}>Male</option>
+                                         <option value="female" {% if patient.gender == 'female' %} selected {% endif %}>Female</option>
+                                         <option value="other" {% if patient.gender == 'other' %} selected {% endif %}>Other</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="maritalStatus" class="form-label">Marital Status:</label>
+                                     <select class="form-select" id="maritalStatus" name="marital_status" disabled>
+                                         <option value="single" {% if patient.marital_status == 'single' %} selected {% endif %}>Single</option>
+                                         <option value="married" {% if patient.marital_status == 'married' %} selected {% endif %}>Married</option>
+                                         <option value="divorced" {% if patient.marital_status == 'divorced' %} selected {% endif %}>Divorced</option>
+                                         <option value="widowed" {% if patient.marital_status == 'widowed' %} selected {% endif %}>Widowed</option>
+                                     </select>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="age" class="form-label">Age:</label>
+                                     <input type="text" class="form-control" id="age" name="age" value="{{ patient.age }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="birthDate" class="form-label mt-2">Birth Date:</label>
+                                     <input type="date" class="form-control" id="birthDate" name="birth_date" value="{{ patient.birth_date }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label class="form-label mt-2">Multiple Birth:</label>
+                                     <div class="form-check">
+                                         <input type="radio" class="form-check-input" name="is_multiple_birth" id="multipleYes"  value="yes" {% if patient and patient.is_multiple_birth %} checked {% endif %}>
+                                         <label class="form-check-label" for="multipleYes">Yes</label>
+                                     </div>
+
+                                     <div class="form-check">
+                                         <input type="radio" class="form-check-input" name="is_multiple_birth" id="multipleNo" value="no" {% if not patient or not patient.is_multiple_birth %} checked {% endif %}>
+                                         <label class="form-check-label" for="multipleNo">No</label>
+                                     </div>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <div id="birthNoField" class="hidden-field" style="display: {% if patient and patient.is_multiple_birth %}block{% else %}none{% endif %}">
+                                         <label for="birthNo" class="form-label mt-2">Indicate Birth No:</label>
+                                         <input type="text" class="form-control" name="birth_no" id="birthNo" value="{{ patient.birth_no }}"  {% if patient and patient.is_multiple_birth %} disabled {% endif %}>
+                                     </div>
+                                 </div>
+                            </div>
+
+                             <!-- Rest of the Form Fields -->
+                             <div class="col-md-4">
+                                 <div class="mb-3">
+                                     <label class="form-label mt-2">Deceased:</label>
+                                     <div class="form-check">
+                                         <input type="radio" class="form-check-input" name="is_deceased" id="deceasedFalse" value="false" {% if not patient or not patient.is_deceased %} checked {% endif %}>
+                                         <label class="form-check-label" for="deceasedFalse">False</label>
+                                     </div>
+                                     <div class="form-check">
+                                         <input type="radio" class="form-check-input" name="is_deceased" id="deceasedTrue" value="true" {% if patient and patient.is_deceased %} checked {% endif %}>
+                                         <label class="form-check-label" for="deceasedTrue">True</label>
+                                     </div>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <div id="deceasedDetailsField" class="hidden-field" style="display: {% if patient and patient.deceased %}block{% else %}none{% endif %}">
+                                         <label for="dateDeceased" class="form-label mt-2">Date of Deceased:</label>
+                                         <input type="date" class="form-control" name="date_deceased" id="dateDeceased" value="{{ patient.date_deceased }}" {% if not patient or not patient.is_deceased %} disabled {% endif %}>
+
+                                         <label for="reasonDeceased" class="form-label mt-2">Reason for Death:</label>
+                                         <input type="text" class="form-control" id="reasonDeceased" name="reason_deceased"  value="{{ patient.reason_deceased }}" {% if not patient or not patient.is_deceased %} disabled {% endif %}>
+                                     </div>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="telephone" class="form-label mt-2">Telephone No:</label>
+                                     <input type="tel" class="form-control" id="telephone" name="phone_number" value="{{ patient.phone_number }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="email" class="form-label mt-2">Email:</label>
+                                     <input type="email" class="form-control" id="email" name="email" value="{{ patient.email }}" disabled>
+                                 </div>
+
+                                 <div class="mb-3">
+                                     <label for="address" class="form-label mt-2">Address:</label>
+                                     <textarea class="form-control" id="address" name="address" rows="3" disabled>{{ patient.address }}</textarea>
+                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Contact Section -->
+                        <h4 class="mt-4">Emergency Contact</h4>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="languagePreferred" class="form-label mt-2">Language Preferred:</label>
+                                    <input type="text" class="form-control" id="Emergency_languagePreferred" name="emergency_language_preferred" value="{{ emergency_contact.language_preferred if emergency_contact else '' }}" disabled>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">First Name:</label>
+                                    <input type="text" class="form-control" id="Emergency_firstName" name="emergency_first_name" value="{{ emergency_contact.first_name if emergency_contact else '' }}" disabled>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="middleName" class="form-label mt-2">Middle Name:</label>
+                                    <input type="text" class="form-control" id="Emergency_middleName" name="emergency_middle_name" value="{{ emergency_contact.middle_name if emergency_contact else '' }}" disabled>
+                                </div>
+
+                                 <div class="mb-3">
+                                    <label for="lastName" class="form-label mt-2">Last Name:</label>
+                                    <input type="text" class="form-control" id="Emergency_lastName" name="emergency_last_name" value="{{ emergency_contact.last_name if emergency_contact else '' }}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <!-- Details Section -->
+                                <div class="mb-3">
+                                    <label for="gender" class="form-label mt-2">Gender:</label>
+                                    <select class="form-select" id="Emergency_gender" name="emergency_gender" disabled>
+                                        <option value="male" {% if emergency_contact.gender == 'male' %} selected {% endif %}>Male</option>
+                                        <option value="female" {% if emergency_contact.gender == 'female' %} selected {% endif %}>Female</option>
+                                        <option value="other" {% if emergency_contact.gender == 'other' %} selected {% endif %}>Other</option>
+                                        <option value="unknown" {% if emergency_contact.gender == 'unknown' %} selected {% endif %}>Unknown</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="relation" class="form-label">Relation:</label>
+                                    <input type="text" class="form-control" id="relation" name="emergency_relation" value="{{ emergency_contact.relation if emergency_contact else '' }}" disabled>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="age" class="form-label">Age:</label>
+                                    <input type="text" class="form-control" id="Emergency_age" name="emergency_age" value="{{ emergency_contact.age if emergency_contact else '' }}" disabled>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="birthDate" class="form-label mt-2">Birth Date:</label>
+                                    <input type="date" class="form-control" id="Emergency_birthDate" name="emergency_birth_date" value="{{ emergency_contact.birth_date if emergency_contact else '' }}" disabled>
+                                </div>
+                            </div>
+
+                                <!-- Contact Section -->
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="telephone" class="form-label mt-2">Telephone No:</label>
+                                    <input type="tel" class="form-control" id="Emergency_telephone" name="emergency_phone_number" value="{{ emergency_contact.phone_number if emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label mt-2">Email:</label>
+                                    <input type="email" class="form-control" id="Emergency_email" name="emergency_email" value="{{ emergency_contact.email if emergency_contact else '' }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label mt-2">Address:</label>
+                                    <textarea class="form-control" id="Emergency_address" rows="3" name="emergency_address" disabled>{{ emergency_contact.address if emergency_contact else '' }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons for Edit, Cancel, and Save -->
+                        <div class="button-container mt-3">
+                            <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                            <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                            <button type="submit" class="btn btn-success save-btn" disabled>{{ 'Update' if patient else 'Add' }}Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proceed   -->
+    <div class="d-flex justify-content-end mt-3">
+            {% if patient %}
+            <form action="{{ url_for('clinical', patient_id=patient.id) }}" method="GET">
+            <button type="submit" class="btn btn-outline-primary" id="proceedToLogButton">
+                Proceed to Clinical
+            </button>
+        </form>
+        {% else %}
+            <button type="button" disabled>Please save the patient before proceeding</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<!-- Bootstrap JS and Dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='form_edit.js') }}"></script>
+<script src="{{ url_for('static', filename='add_patient.js') }}"></script>
+
+{% endblock %}

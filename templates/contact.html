@@ -1,0 +1,88 @@
+{% extends "base_one.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+    <!-- Hero Section with Overlay -->
+    <div class="contact-hero-section">
+        <div class="contact-overlay">
+            <div class="contact-heading-text">
+                <h1>SUPPORT</h1>
+            </div>
+        </div>
+    </div>
+
+ <div class="row justify-content-center">
+        <div class="col-md-6 contact-faq-contact-section">
+            <!-- Frequently Asked Questions -->
+            <h2 class="text-center mb-4">Frequently Asked Questions</h2>
+            <div class="d-grid gap-3 mb-5">
+                <!-- FAQ 1 -->
+                <button type="button" class="contact-btn contact-btn-faq d-flex justify-content-between align-items-center px-4 py-3" onclick="toggleAnswer('faq1')">
+                    How do I change my password?
+                    <span class="fs-5">+</span>
+                </button>
+                <div id="faq1" class="faq-answer" style="display: none;">
+                    <p>To change your password, click on the account tab in the sidebar.
+                        In the password management section, enter your current password, new password, and confirm the new password.
+                        Then, click 'Update Password' button to save your changes</p>
+                </div>
+
+                <!-- FAQ 2 -->
+                <button type="button" class="contact-btn contact-btn-faq d-flex justify-content-between align-items-center px-4 py-3" onclick="toggleAnswer('faq2')">
+                    I forgot my password?
+                    <span class="fs-5">+</span>
+                </button>
+                <div id="faq2" class="faq-answer" style="display: none;">
+                    <p>If you forgot your password, click on 'Forgot Password or Username' on the login page and follow the instructions to reset your password.</p>
+                </div>
+
+                 <!-- FAQ 3 -->
+                <button type="button" class="contact-btn contact-btn-faq d-flex justify-content-between align-items-center px-4 py-3" onclick="toggleAnswer('faq3')">
+                    I forgot my username?
+                    <span class="fs-5">+</span>
+                </button>
+                <div id="faq3" class="faq-answer" style="display: none;">
+                     <p>If you forgot your username, click on 'Forgot Password or Username' on the login page and follow the instructions to get your username.</p>
+            </div>
+
+                <!-- Contact Form -->
+                <h3 id="contactForm">Contact Form</h3>
+                <form method="POST" action="{{ url_for('contact_support_public') + '#contactForm' }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject:</label>
+                        <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter the subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message:</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" placeholder="Enter your message" required></textarea>
+                    </div>
+                    <button type="submit" class="contact-btn contact-btn-primary">Send</button>
+                </form>
+
+            </div>
+        </div>
+ </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // JavaScript function to toggle the visibility of the FAQ answers
+    function toggleAnswer(faqId) {
+        var answer = document.getElementById(faqId);
+        if (answer.style.display === "none") {
+            answer.style.display = "block";
+        } else {
+            answer.style.display = "none";
+        }
+    }
+</script>
+{% endblock %}

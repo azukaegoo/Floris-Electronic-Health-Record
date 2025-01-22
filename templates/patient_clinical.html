@@ -1,0 +1,1352 @@
+{% extends "base_two.html" %}
+{% block title %} Patient Clinical {% endblock %}
+
+{% block content %}
+
+<div class="col-md-10 patient-main-content">
+    <div class="card mb-4">
+        <div class="card-header patient-bg text-white">
+            <h5>Patient Information</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> {{ patient.patient_id }} </p>
+            <p><strong>Name:</strong> {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }} </p>
+            <p><strong>Age:</strong> {{ patient.age }} </p>
+
+            <form action="{{ url_for('add_or_edit_patient', patient_id=patient.id) }}" method="GET">
+                <button class="btn btn-primary">View Full Information</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card" >
+        <div class="card-header patient-bg text-white">
+            <h5>Patient Clinical</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <!-- Tab Buttons -->
+                <div class="col-12">
+                    <ul class="nav  nav-pills" id="patientTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'vitals' %}active{% endif %}" id="vitals-tab" data-bs-toggle="pill" href="#vitals" role="tab" aria-controls="vitals" aria-selected="true">Vitals</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'medical-history' %}active{% endif %}" id="medical-history-tab" data-bs-toggle="pill" href="#medical-history" role="tab" aria-controls="medical-history" aria-selected="false">Medical History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'medication' %}active{% endif %}" id="medication-tab" data-bs-toggle="pill" href="#medication" role="tab" aria-controls="medication" aria-selected="false">Medication</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'radiology' %}active{% endif %}" id="radiology-tab" data-bs-toggle="pill" href="#radiology" role="tab" aria-controls="radiology" aria-selected="false">Radiology</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'laboratory' %}active{% endif %}" id="laboratory-tab" data-bs-toggle="pill" href="#laboratory" role="tab" aria-controls="laboratory" aria-selected="false">Laboratory</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_tab == 'billing' %}active{% endif %}" id="billing-tab" data-bs-toggle="pill" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--  -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tab-content" id="patientTabsContent">
+                            <!-- Vitals -->
+                            <div class="tab-pane fade {% if active_tab == 'vitals' %}show active{% endif %}" id="vitals" role="tabpanel" aria-labelledby="vitals-tab">
+                                <h3> Vitals</h3>
+
+                                <form class="patient-form" method="POST" action="{{ url_for('patient_vitals', patient_id=patient.id) }}">
+                                    <input type="hidden" name="vital_record_id" id="vitalRecordId" value="{{ vit_record.id if vit_record else '' }}">
+                                    <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                    <div class="row">
+                                        <div class="col-md-4">
+
+                                            <!-- Weight -->
+                                            <div class="mb-3">
+                                                <label for="weight" class="form-label">Weight</label>
+                                                <input type="text" class="form-control" id="weight" placeholder="Enter weight (kg)" name="weight" value="{{ vit_record.weight if vit_record else '' }}" disabled >
+                                            </div>
+
+                                            <!-- Blood Pressure -->
+                                            <div class="mb-3">
+                                                <label for="bloodPressure" class="form-label">Blood Pressure</label>
+                                                <input type="text" class="form-control" id="bloodPressure" placeholder="Enter blood pressure (e.g., 120/80 mmHg)" name="bloodPressure" value="{{ vit_record.blood_pressure if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Temperature -->
+                                            <div class="mb-3">
+                                                <label for="temperature" class="form-label">Temperature</label>
+                                                <input type="text" class="form-control" id="temperature"  placeholder="Enter temperature (°C)" name="temperature" value="{{ vit_record.temperature if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Heart Rate -->
+                                            <div class="mb-3">
+                                                <label for="heartRate" class="form-label">Heart Rate</label>
+                                                <input type="text" class="form-control" id="heartRate" placeholder="Enter heart rate (beats/min)" name="heartRate" value="{{ vit_record.heart_rate if vit_record else '' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <!-- Respiratory Rate -->
+                                            <div class="mb-3">
+                                                <label for="respiratoryRate" class="form-label">Respiratory Rate</label>
+                                                <input type="text" class="form-control" id="respiratoryRate" placeholder="Enter respiratory rate (breaths/min)" name="respiratoryRate" value="{{ vit_record.respiratory_rate if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Oxygen Saturation -->
+                                            <div class="mb-3">
+                                                <label for="oxygenSaturation" class="form-label">Oxygen Saturation</label>
+                                                <input type="text" class="form-control" id="oxygenSaturation"  placeholder="Enter oxygen saturation (%)" name="oxygenSaturation" value="{{ vit_record.oxygen_saturation if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Blood Glucose Level -->
+                                            <div class="mb-3">
+                                                <label for="bloodGlucose" class="form-label">Blood Glucose Level</label>
+                                                <input type="text" class="form-control" id="bloodGlucose" placeholder="Enter blood glucose (mg/dL)" name="bloodGlucose" value="{{ vit_record.blood_glucose if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Pulse Oximetry -->
+                                            <div class="mb-3">
+                                                <label for="pulseOximetry" class="form-label">Pulse Oximetry</label>
+                                                <input type="text" class="form-control" id="pulseOximetry"  placeholder="Enter pulse oximetry (%)" name="pulseOximetry" value="{{ vit_record.pulse_oximetry if vit_record else '' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <!-- Measurement Date/Time -->
+                                            <div class="mb-3">
+                                                <label for="measurementDate" class="form-label">Measurement Date/Time</label>
+                                                <input type="datetime-local" class="form-control" id="measurementDate" name="measurementDate" value="{{ vit_record.measurement_date if vit_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Observation Status -->
+                                            <div class="mb-3">
+                                                <label for="status" class="form-label">Status</label>
+                                                <select class="form-select" id="status" name="vitalStatus" disabled>
+                                                    <option value="Final" {% if vit_record and vit_record.vital_status == 'Final' %}selected{% endif %}>Final</option>
+                                                    <option value="Preliminary" {% if vit_record and vit_record.vital_status == 'Preliminary' %}selected{% endif %}>Preliminary</option>
+                                                    <option value="Amended" {% if vit_record and vit_record.vital_status == 'Amended' %}selected{% endif %}>Amended</option>
+                                                    <option value="Registered" {% if vit_record and vit_record.vital_status == 'Registered' %}selected{% endif %}>Registered</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Notes (optional remarks on the vitals -->
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">Notes</label>
+                                            <textarea class="form-control" id="vitals-notes" rows="3" placeholder="Any additional notes regarding the vital signs" name="vitalsNotes"  disabled>{{ vit_record.vital_notes if vit_record else '' }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Buttons for Edit, Cancel, and Save -->
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Vital Record table -->
+                                <div class="container patient-mt-4" id="vital-record-table">
+                                    <h4>Vitals Record Table</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3" id="vital_record_table">
+                                        <div>
+                                            <form action="{{ url_for('vital_records_table') + '#vital-record-table' }}" method="GET" style="display: inline;">
+                                                <label for="vital_entries">Entries:</label>
+                                                <select id="vital_entries" name="vital_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                <option value="10" {% if vital_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                <option value="25" {% if vital_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                <option value="50" {% if vital_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                            </select>
+
+                                                <input type="hidden" name="vital_search" value="{{ vital_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="search_vital">Search by Date:</label>
+                                            <form action="{{ url_for('vital_records_table') + '#vital-record-table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                    <input type="text" name="vital_search" id="search_vital" class="form-control"
+                                                           value="{{ vital_search_term }}" placeholder="Search by date (YYYY-MM-DD)">
+                                                    <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('vital_records_table', patient_id=patient.id) + '#vital-record-table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                <input type="hidden" name="vital_entries" value="{{ vital_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Weight</th>
+                                                <th>Blood Pressure</th>
+                                                <th>Temperature</th>
+                                                <th>Heart Rate</th>
+                                                <th>Respiratory Rate</th>
+                                                <th>Oxygen Saturation</th>
+                                                <th>Blood Glucose</th>
+                                                <th>Pulse Oximetry</th>
+                                                <th>Measurement Date and Time</th>
+                                                <th>Status</th>
+                                                <th>Notes</th>
+                                                <th>Last Updated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if vital_records %}
+                                            {% for rec_vit in vital_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ rec_vit.weight if rec_vit.weight else 'N/A' }}</td>
+                                                <td>{{ rec_vit.blood_pressure if rec_vit.blood_pressure else 'N/A' }}</td>
+                                                <td>{{ rec_vit.temperature if rec_vit.temperature else 'N/A' }}</td>
+                                                <td>{{ rec_vit.heart_rate if rec_vit.heart_rate else 'N/A' }}</td>
+                                                <td>{{ rec_vit.respiratory_rate if rec_vit.respiratory_rate else 'N/A' }}</td>
+                                                <td>{{ rec_vit.oxygen_saturation if rec_vit.oxygen_saturation else 'N/A' }}</td>
+                                                <td>{{ rec_vit.blood_glucose if rec_vit.blood_glucose else 'N/A' }}</td>
+                                                <td>{{ rec_vit.pulse_oximetry if rec_vit.pulse_oximetry else 'N/A' }}</td>
+                                                <td>{{ rec_vit.measurement_date if rec_vit.measurement_date else 'N/A' }}</td>
+                                                <td>{{ rec_vit.vital_status if rec_vit.vital_status else 'N/A' }}</td>
+                                                <td>{{ rec_vit.vital_notes if rec_vit.vital_notes else 'N/A' }}</td>
+                                                <td>{{ rec_vit.vital_updated_at.strftime('%Y-%m-%d %H:%M:%S') if rec_vit.vital_updated_at else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_vitals_record', vital_record_id=rec_vit.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_vitals_record', vital_record_id=rec_vit.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="14" class="text-center">No vital records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if vital_prev_url %}
+                                                    <li class="page-item"><a class="page-link" href="{{ vital_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                    {% if page_num %}
+                                                        <li class="page-item {% if page_num == pagination.vital_page %}active{% endif %}">
+                                                            <a class="page-link" href="{{ url_for('vital_records_table', patient_id=patient.id, vital_page=page_num, vital_entries=entries_per_page, vital_search=vital_search_term) + '#vital-record-table' }}">{{ page_num }}</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                {% if vital_next_url %}
+                                                    <li class="page-item"><a class="page-link" href="{{ vital_next_url }}">Next</a></li>
+                                                {% else %}
+                                                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Medical History Tab -->
+                            <div class="tab-pane fade {% if active_tab == 'medical-history' %}show active{% endif %}"  id="medical-history" role="tabpanel" aria-labelledby="medical-history-tab">
+                                <h3>Medical History</h3>
+                                <form class="patient-form" method="POST" action="{{ url_for('medical_history', patient_id=patient.id) }}">
+                                    <input type="hidden" name="medical_record_id" id="medicalRecordId" value="{{ medic_record.id if medic_record else '' }}">
+
+                                    <!-- Past Medical History -->
+                                    <div class="mb-3">
+                                        <label for="pastMedicalHistory" class="form-label">Past Medical History</label>
+                                        <textarea class="form-control" id="pastMedicalHistory" rows="3" placeholder="Enter patient's past medical conditions and diagnoses" name="medicalHistory" disabled>{{ medic_record.past_medical_history if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Family History -->
+                                    <div class="mb-3">
+                                        <label for="familyHistory" class="form-label">Family History</label>
+                                        <textarea class="form-control" id="familyHistory" rows="3" placeholder="Enter relevant family history of diseases" name="familyHistory" disabled>{{ medic_record.family_history if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Surgical History -->
+                                    <div class="mb-3">
+                                        <label for="surgicalHistory" class="form-label">Surgical History</label>
+                                        <textarea class="form-control" id="surgicalHistory" rows="3" placeholder="Enter previous surgeries or procedures" name="surgicalHistory" disabled>{{ medic_record.surgical_history if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Allergies -->
+                                    <div class="mb-3">
+                                        <label for="allergiesIntolerance" class="form-label">Known Allergies</label>
+                                        <textarea class="form-control" id="allergiesIntolerance" rows="3" placeholder="Enter known allergies (e.g., drugs, foods, environmental allergens)" name="knownAllergies" disabled>{{ medic_record.known_allergies if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Immunization Status -->
+                                    <div class="mb-3">
+                                        <label for="immunizationStatus" class="form-label">Immunization Status</label>
+                                        <textarea class="form-control" id="immunizationStatus" rows="3" placeholder="Enter immunization status (e.g., up to date with vaccines, recent vaccinations)" name="immunizationStatus" disabled>{{ medic_record.immunization_status if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Immunization History -->
+                                    <div class="mb-3">
+                                        <label for="immunizationHistory" class="form-label">Immunization History</label>
+                                        <textarea class="form-control" id="immunizationHistory" rows="3" placeholder="Enter details about past immunizations, including dates and types of vaccines" name="immunizationHistory" disabled>{{ medic_record.immunization_history if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Chronic Conditions -->
+                                    <div class="mb-3">
+                                        <label for="chronicConditions" class="form-label">Chronic Conditions</label>
+                                        <textarea class="form-control" id="chronicConditions" rows="3" placeholder="Enter details of chronic conditions (e.g., diabetes, hypertension, asthma)" name="chronicConditions" disabled>{{ medic_record.chronic_conditions if medic_record else '' }}</textarea>
+                                    </div>
+
+
+                                    <!-- Notes (Optional) -->
+                                    <div class="mb-3">
+                                        <label for="medicalHistoryNotes" class="form-label">Additional Notes</label>
+                                        <textarea class="form-control" id="medicalHistoryNotes" rows="3" placeholder="Any additional information about the patient's medical history" name="historyAdditionalNotes" disabled>{{ medic_record.medical_history_additional_notes if medic_record else '' }}</textarea>
+                                    </div>
+
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Medical History Record table -->
+                                <div class="container patient-mt-4" id="medical_history_record_table">
+                                    <h4>Medical Record Table</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form action="{{ url_for('medical_history_records_table') + '#medical_history_record_table' }}" method="GET" style="display: inline;">
+                                                <label for="medical_entries">Entries:</label>
+                                                <select id="medical_entries" name="medical_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                <option value="10" {% if medical_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                <option value="25" {% if medical_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                <option value="50" {% if medical_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                            </select>
+                                                <input type="hidden" name="medical_search" value="{{ medical_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="medical_search">Search by Date:</label>
+                                            <form action="{{ url_for('medical_history_records_table') + '#medical_history_record_table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                    <input type="text" id="medical_search" name="medical_search" class="form-control"  placeholder="Search by date (YYYY-MM-DD)" value="{{ medical_search_term }}">
+                                                    <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('medical_history_records_table', patient_id=patient.id) + '#medical_history_record_table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                <input type="hidden" name="medical_entries" value="{{ medical_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Past Medical History</th>
+                                                <th>Family History</th>
+                                                <th>Surgical History</th>
+                                                <th>Known Allergies</th>
+                                                <th>Immunization Status</th>
+                                                <th>Immunization History</th>
+                                                <th>Chronic conditions</th>
+                                                <th>Additional Notes</th>
+                                                <th>Last Updated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if medical_records %}
+                                            {% for rec_medic in medical_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ rec_medic.past_medical_history if rec_medic.past_medical_history else 'N/A' }}</td>
+                                                <td>{{ rec_medic.family_history if rec_medic.family_history else 'N/A' }}</td>
+                                                <td>{{ rec_medic.surgical_history if rec_medic.surgical_history else 'N/A' }}</td>
+                                                <td>{{ rec_medic.known_allergies if rec_medic.known_allergies else 'N/A' }}</td>
+                                                <td>{{ rec_medic.immunization_status if rec_medic.immunization_status else 'N/A' }}</td>
+                                                <td>{{ rec_medic.immunization_history if rec_medic.immunization_history else 'N/A' }}</td>
+                                                <td>{{ rec_medic.chronic_conditions if rec_medic.chronic_conditions else 'N/A' }}</td>
+                                                <td>{{ rec_medic.medical_history_additional_notes if rec_medic.medical_history_additional_notes else 'N/A' }}</td>
+                                                <td>{{ rec_medic.medical_history_last_update.strftime('%Y-%m-%d %H:%M:%S') if rec_medic.medical_history_last_update else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_medical_history_record', medical_record_id=rec_medic.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_medical_history_record', medical_record_id=rec_medic.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="11" class="text-center">No vital records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if medical_prev_url %}
+                                                    <li class="page-item"><a class="page-link" href="{{ medical_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                    {% if page_num %}
+                                                        <li class="page-item {% if page_num == pagination.vital_page %}active{% endif %}">
+                                                            <a class="page-link" href="{{ url_for('medical_history_records_table', patient_id=patient.id, medical_page=page_num, medical_entries=medical_entries_per_page, medical_search=medical_search_term) + '#medical_history_record_table' }}">{{ page_num }}</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                {% if medical_next_url %}
+                                                    <li class="page-item"><a class="page-link" href="{{ medical_next_url }}">Next</a></li>
+                                                {% else %}
+                                                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Medication  Tab -->
+                            <div class="tab-pane fade {% if active_tab == 'medication' %}show active{% endif %}" id="medication" role="tabpanel" aria-labelledby="medication-tab">
+                                <h3>Medication</h3>
+                                <form class="patient-form" method="POST" action="{{ url_for('medicate', patient_id=patient.id) }}">
+                                    <input type="hidden" name="medicate_record_id" id="medicateRecordId" value="{{ medit_record.id if medit_record else '' }}">
+
+                                    <!-- Current Medications -->
+                                    <div class="mb-3">
+                                        <label for="currentMedications" class="form-label">Current Medications</label>
+                                        <textarea class="form-control" id="currentMedications" rows="3" placeholder="Enter current medications, including dosages and frequency" name="currentMedications" disabled>{{ medit_record.current_medications if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Medication Allergies -->
+                                    <div class="mb-3">
+                                        <label for="medicationAllergies" class="form-label">Known Medication Allergies</label>
+                                        <textarea class="form-control" id="medicationAllergies" rows="3" placeholder="Enter any known allergies to medications" name="knownMedicationAllergies" disabled>{{ medit_record.known_medication_allergies if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Previous Medications -->
+                                    <div class="mb-3">
+                                        <label for="previousMedications" class="form-label">Previous Medications</label>
+                                        <textarea class="form-control" id="previousMedications" rows="3" placeholder="Enter previous medications prescribed to the patient" name="previousMedications" disabled>{{ medit_record.previous_medications if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Medication History Notes -->
+                                    <div class="mb-3">
+                                        <label for="medicationHistoryNotes" class="form-label">Medication History Notes</label>
+                                        <textarea class="form-control" id="medicationHistoryNotes" rows="3" placeholder="Additional notes or concerns about the patient’s medication history" name="medicationHistoryNotes" disabled>{{ medit_record.medication_history_notes if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Medication Administration Instructions -->
+                                    <div class="mb-3">
+                                        <label for="medicationAdministration" class="form-label">Medication Administration Instructions</label>
+                                        <textarea class="form-control" id="medicationAdministration" rows="3" placeholder="Enter instructions for medication administration (e.g., before meals, with water)" name="medAdministrationInstruct" disabled>{{ medit_record.medication_administration_instructions if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Changes in Medication -->
+                                    <div class="mb-3">
+                                        <label for="changesInMedication" class="form-label">Recent Changes in Medication</label>
+                                        <textarea class="form-control" id="changesInMedication" rows="3" placeholder="Enter any recent changes in the patient’s medication regimen" name="medicationChange" disabled>{{ medit_record.changes_in_medication if medit_record else '' }}</textarea>
+                                    </div>
+
+                                    <!-- Medication Refills -->
+                                    <div class="mb-3">
+                                        <label for="medicationRefills" class="form-label">Medication Refills</label>
+                                        <input type="text" class="form-control" id="medicationRefills" placeholder="Enter number of refills available"  name="medRefills" value="{{ medit_record.medication_refills if medit_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- Start Date of Medication -->
+                                    <div class="mb-3">
+                                        <label for="startDate" class="form-label">Medication Start Date</label>
+                                        <input type="date" class="form-control" id="startDate" name="medStart" value="{{ medit_record.medication_start_date if medit_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- End Date of Medication -->
+                                    <div class="mb-3">
+                                        <label for="endDate" class="form-label">Medication End Date</label>
+                                        <input type="date" class="form-control" id="endDate" name="medEnd" value="{{ medit_record.medication_end_date if medit_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- Medication Review Date -->
+                                    <div class="mb-3">
+                                        <label for="reviewDate" class="form-label">Next Medication Review Date</label>
+                                        <input type="date" class="form-control" id="reviewDate" name="nextReviewDate" value="{{ medit_record.next_review_date if medit_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- Prescribing Doctor -->
+                                    <div class="mb-3">
+                                        <label for="prescribingDoctor" class="form-label">Prescribing Doctor</label>
+                                        <input type="text" class="form-control" id="prescribingDoctor" placeholder="Enter name of the prescribing doctor"  value="{{ user.first_name }} {{ user.last_name}}" readonly disabled>
+                                    </div>
+
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Medication Record table -->
+                                <div class="container patient-mt-4" id="medication_record_table">
+                                    <h4>Medication Record Table</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form action="{{ url_for('medicate_records_table') + '#medication_record_table' }}" method="GET" style="display: inline;">
+                                                <label for="medicate_entries">Entries:</label>
+                                                <select id="medicate_entries" name="medicate_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                    <option value="10" {% if medicate_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if medicate_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if medicate_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                                </select>
+                                                <input type="hidden" name="medicate_search" value="{{ medicate_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="medicate_search">Search:</label>
+                                            <form action="{{ url_for('medicate_records_table') + '#medication_record_table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                    <input type="text" id="medicate_search" name="medical_search" class="form-control" placeholder="Search by date (YYYY-MM-DD)" value="{{ medical_search_term }}">
+                                                    <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('medicate_records_table', patient_id=patient.id) + '#medication_record_table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+                                                    <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                    <input type="hidden" name="entries" value="{{ medicate_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Current Medication</th>
+                                                 <th>Known Medication Allergies</th>
+                                                 <th>Previous Medications</th>
+                                                 <th>Medication History Notes</th>
+                                                 <th>Medication Administration</th>
+                                                 <th>Recent Medication Changes</th>
+                                                 <th>Medication Refills</th>
+                                                 <th>Medication Start Date</th>
+                                                 <th>Medication End Date</th>
+                                                 <th>Medication Next Review Date</th>
+                                                 <th>Prescribing Doctor</th>
+                                                 <th>Last Updated</th>
+                                                 <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if medicate_records %}
+                                            {% for rec_medit in medicate_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ rec_medit.current_medications if rec_medit.current_medications else 'N/A' }}</td>
+                                                <td>{{ rec_medit.known_medication_allergies if rec_medit.known_medication_allergies else 'N/A' }}</td>
+                                                <td>{{ rec_medit.previous_medications if rec_medit.previous_medications else 'N/A'  }}</td>
+                                                <td>{{ rec_medit.medication_history_notes if rec_medit.medication_history_notes else 'N/A' }}</td>
+                                                <td>{{ rec_medit.medication_administration_instructions if rec_medit.medication_administration_instructions else 'N/A' }}</td>
+                                                <td>{{ rec_medit.changes_in_medication if rec_medit.changes_in_medication else 'N/A' }}</td>
+                                                <td>{{ rec_medit.medication_refills if rec_medit.medication_refills else 'N/A' }}</td>
+                                                <td>{{ rec_medit.medication_start_date if rec_medit.medication_start_date else 'N/A' }}</td>
+                                                <td>{{ rec_medit.medication_end_date if rec_medit.medication_end_date else 'N/A' }}</td>
+                                                <td>{{ rec_medit.next_review_date if rec_medit.next_review_date else 'N/A' }}</td>
+                                                <td>{{ user.first_name + ' ' + user.last_name if user.first_name and user.last_name else 'N/A' }}</td>
+                                                <td>{{ rec_medit.medication_last_update.strftime('%Y-%m-%d %H:%M:%S') if rec_medit.medication_last_update else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_medicate_record', medicate_record_id=rec_medit.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_medicate_record', medicate_record_id=rec_medit.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="13" class="text-center">No vital records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if medicate_prev_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ medicate_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                {% if page_num %}
+                                                <li class="page-item {% if page_num == pagination.medicate_page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ url_for('medicate_records_table', medicate_page=page_num, patient_id=patient.id, medicate_entries=medicate_entries_per_page, medicate_search=medicate_search_term) + '#medication_record_table' }}">{{ page_num }}</a>
+                                                </li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                {% endif %}
+                                                {% endfor %}
+
+                                                {% if medicate_next_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ medicate_next_url }}">Next</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Radiology Tab -->
+                            <div class="tab-pane fade {% if active_tab == 'radiology' %}show active{% endif %}" id="radiology" role="tabpanel" aria-labelledby="radiology-tab">
+                                <h3>Radiology</h3>
+                                <form class="patient-form" method="POST" enctype="multipart/form-data" action="{{ url_for('radiology', patient_id=patient.id) }} ">
+                                    <input type="hidden" name="record_id" id="recordId" value="{{ rad_record.id if rad_record else '' }}">
+                                    <div class="row">
+                                        <div class="col-md-4">
+
+                                            <!-- Radiology Procedure -->
+                                            <div class="mb-3">
+                                                <label for="radiologyProcedure" class="form-label">Radiology Procedure</label>
+                                                <input type="text" class="form-control" id="radiologyProcedure" placeholder="Enter radiology procedure name" name="radProcedure" value="{{ rad_record.radiology_procedure if rad_record else '' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <!-- Procedure Date -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="procedureDate" class="form-label">Procedure Date</label>
+                                                <input type="date" class="form-control" id="procedureDate" name="procedureDate" value="{{ rad_record.procedure_date if rad_record else '' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <!-- Imaging Type -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="imagingType" class="form-label">Imaging Type</label>
+                                                <select class="form-select" id="imagingType" name="imagingType" disabled>
+                                                    <option value="">Select imaging type</option>
+                                                    {% for type in ['X-Ray', 'CT Scan', 'MRI', 'Ultrasound', 'PET Scan', 'Fluoroscopy'] %}
+                                                    <option value="{{ type }}" {% if rad_record and rad_record.imaging_type == type %}selected{% endif %}>{{ type }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Image Files -->
+                                        <div class="mb-3">
+                                            <label for="imageFiles" class="form-label">Upload Radiology Images</label>
+                                            <input type="file" class="form-control" id="imageFiles" name="imageFiles" multiple accept=".jpeg, .png, .jpg">
+
+                                            <!-- Conditional Warning Message -->
+                                            {% if rad_record.images %}
+                                            <small class="text-danger">
+                                                Updating images will replace the existing images in this form. Ensure you upload all necessary files.
+                                            </small>
+                                            {% endif %}
+                                        </div>
+
+                                        <div id="previewContainer" class="row mt-3">
+                                            {% if rad_record.images %}
+                                            {% for image in rad_record.images.split(',') %}
+                                            <div class="col-md-3 mb-3">  <!-- Apply col-md-3 to each image -->
+                                                <img src="{{ url_for('static', filename='uploads/patient_dicom/' + image) }}" class="img-thumbnail" alt="Radiology Image">
+                                            </div>
+                                            {% endfor %}
+                                            {% else %}
+                                            <p>No radiology image available.</p>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Full Image View Modal -->
+                                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img id="fullImagePreview" src="" class="img-fluid" alt="Full Image Preview">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Image Interpretation -->
+                                        <div class="mb-3">
+                                            <label for="imageInterpretation" class="form-label">Image Interpretation</label>
+                                            <textarea class="form-control" id="imageInterpretation" rows="4" placeholder="Enter interpretation or findings for the images" name="imageInterpretation" disabled>{{ rad_record.image_interpretation if rad_record else '' }}</textarea>
+                                        </div>
+
+                                        <!-- Findings -->
+                                        <div class="mb-3">
+                                            <label for="findings" class="form-label">Findings</label>
+                                            <textarea class="form-control" id="findings" rows="4" placeholder="Enter clinical findings based on radiology images" name="findings" disabled>{{ rad_record.findings if rad_record else '' }}</textarea>
+                                        </div>
+
+                                        <!-- Recommendations -->
+                                        <div class="mb-3">
+                                            <label for="recommendations" class="form-label">Recommendations</label>
+                                            <textarea class="form-control" id="recommendations" rows="3" placeholder="Enter recommendations based on radiology findings" name="recommendations" disabled>{{ rad_record.recommendations if rad_record else '' }}</textarea>
+                                        </div>
+
+                                        <!-- Follow-up -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="followUp" class="form-label">Follow-up Required</label>
+                                                <select class="form-select" id="followUp" name="followUp" disabled>
+                                                    <option value="">Select follow-up status</option>
+                                                    <option value="Yes" {{ 'selected' if rad_record and rad_record.follow_up_required else '' }}>Yes</option>
+                                                    <option value="No" {{ 'selected' if rad_record and not rad_record.follow_up_required else '' }}>No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Follow-up Date -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="followUpDate" class="form-label">Follow-up Date</label>
+                                                <input type="date" class="form-control" id="followUpDate" name="followUpDate" value="{{ rad_record.follow_up_date if rad_record else '' }}" {% if rad_record and not rad_record.follow_up_required %} disabled {% endif %} >
+                                            </div>
+                                        </div>
+
+                                        <!-- Radiologist Name -->
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="radiologistName" class="form-label">Radiologist Name</label>
+                                                <input type="text" class="form-control" id="radiologistName" placeholder="Enter radiologist's name" name="radiologistName" value="{{ rad_record.radiologist_name if rad_record else '' }}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <!-- Additional Notes -->
+                                        <div class="mb-3">
+                                            <label for="additionalNotes" class="form-label">Additional Notes</label>#
+                                            <textarea class="form-control" id="additionalNotes" rows="3" placeholder="Enter any additional notes related to the radiology procedure" name="radAdditionalNotes" disabled>{{ rad_record.radiology_additional_notes if rad_record else '' }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Radiology Records Table -->
+                                <div class="container patient-mt-4" id="radiology_record_table">
+                                    <h4>Radiology Records</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form action="{{ url_for('radiology_records_table') + '#radiology_record_table' }}" method="GET" style="display: inline;">
+                                                <label for="radiology_entries">Entries:</label>
+                                                <select id="radiology_entries" name="radiology_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                    <option value="10" {% if radiology_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if radiology_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if radiology_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                                </select>
+                                                <input type="hidden" name="radiology_search" value="{{ radiology_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="radiology_search">Search:</label>
+                                            <form action="{{ url_for('radiology_records_table') + '#radiology_record_table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                    <input type="text" id="radiology_search" name="radiology_search" class="form-control" placeholder="Search by Date (YYYY-MM-DD | Procedure" value="{{ radiology_search_term }}">
+                                                    <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('radiology_records_table', patient_id=patient.id) + '#radiology_record_table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+                                                    <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                    <input type="hidden" name="radiology_entries" value="{{ radiology_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Radiology Procedure</th>
+                                                <th>Procedure Date</th>
+                                                <th>Imaging Type</th>
+                                                <th>No of Images Uploaded</th>
+                                                <th>Image Interpretation</th>
+                                                <th>Findings</th>
+                                                <th>Recommendation</th>
+                                                <th>Follow Required</th>
+                                                <th>Follow-Up date</th>
+                                                <th>Radiologist Name</th>
+                                                <th>Additional Notes</th>
+                                                <th>Last Updated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if radiology_records %}
+                                            {% for record in radiology_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ record.radiology_procedure if record.radiology_procedure else 'N/A' }}</td>
+                                                <td>{{ record.procedure_date.strftime('%Y-%m-%d') if record.procedure_date else 'N/A' }}</td>
+                                                <td>{{ record.imaging_type if record.imaging_type else 'N/A' }}</td>
+                                                <td>{{ record.images.split(',')|length if record.images else 0 }}</td>
+                                                <td>{{ record.image_interpretation if record.image_interpretation else 'N/A' }}</td>
+                                                <td>{{ record.findings if record.findings else 'N/A' }}</td>
+                                                <td>{{ record.recommendations if record.recommendations else 'N/A' }}</td>
+                                                <td>{{ record.follow_up_required if record.follow_up_required else 'N/A' }}</td>
+                                                <td>{{ record.follow_up_date if record.follow_up_date else 'N/A' }}</td>
+                                                <td>{{ record.radiologist_name if record.radiologist_name else 'N/A' }}</td>
+                                                <td>{{ record.radiology_additional_notes if record.radiology_additional_notes else 'N/A' }}</td>
+                                                <td>{{ record.updated_at.strftime('%Y-%m-%d %H:%M:%S') if record.updated_at else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_radiology_record', record_id=record.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_radiology_record', record_id=record.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="14" class="text-center">No radiology records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if radiology_prev_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ radiology_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                {% if page_num %}
+                                                <li class="page-item {% if page_num == pagination.radiology_page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ url_for('radiology_records_table', radiology_page=page_num, patient_id=patient.id, radiology_entries=radiology_entries_per_page, radiology_search=radiology_search_term) + '#radiology_record_table' }}">{{ page_num }}</a>
+                                                </li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                {% endif %}
+                                                {% endfor %}
+
+                                                {% if radiology_next_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ radiology_next_url }}">Next</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Laboratory Tab -->
+                            <div class="tab-pane fade {% if active_tab == 'laboratory' %}show active{% endif %}" id="laboratory" role="tabpanel" aria-labelledby="laboratory-tab">
+                                <h3>Laboratory</h3>
+                                <form class="patient-form" method="POST" action="{{ url_for('laboratory', patient_id=patient.id) }}">
+                                    <input type="hidden" name="laboratory_record_id" id="laboratoryRecordId" value="{{ labtory_record.id if labtory_record else '' }}">
+                                    <div class="row">
+
+                                <div class="col-md-4">
+
+                                    <!-- Laboratory Test Type -->
+                                    <div class="mb-3">
+                                        <label for="testType" class="form-label">Test Type</label>
+                                        <select class="form-select" id="testType" name="testType" disabled>
+                                            <option value="">Select Test Type</option>
+                                            <option value="BloodTest" {{ 'selected' if labtory_record and labtory_record.test_type == 'BloodTest' else '' }}>Blood Test</option>
+                                            <option value="UrineTest" {{ 'selected' if labtory_record and labtory_record.test_type == 'UrineTest' else '' }}>Urine Test</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Laboratory Test Code (specific test or procedure) -->
+                                    <div class="mb-3">
+                                        <label for="testCode" class="form-label">Test Code</label>
+                                        <select class="form-select" id="testCode" name="testCode" disabled>
+                                            <option value="">Select Test</option>
+                                            <option value="CBC" {{ 'selected' if labtory_record  and labtory_record.test_code == 'CBC' else ''}}>Complete Blood Count (CBC)</option>
+                                            <option value="BloodSugar" {{ 'selected' if labtory_record and labtory_record.test_code == 'BloodSugar' else ''}}>Blood Sugar</option>
+                                            <option value="Cholesterol" {{ 'selected' if labtory_record and labtory_record.test_code == 'Cholesterol' else ''}}>Cholesterol</option>
+                                            <option value="LiverFunction" {{ 'selected' if labtory_record and labtory_record.test_code == 'LiverFunction' else ''}}>Liver Function Test</option>
+                                            <option value="KidneyFunction" {{ 'selected' if labtory_record and labtory_record.test_code == 'KidneyFunction' else ''}}>Kidney Function Test</option>
+                                            <option value="HIVTest" {{ 'selected' if labtory_record and labtory_record.test_code == 'HIVTest' else ''}}>HIV Test</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Test Result (result of the test) -->
+                                    <div class="mb-3">
+                                        <label for="testResult" class="form-label">Test Result</label>
+                                        <input type="text" class="form-control" id="testResult" placeholder="Enter the result of the test" name="testResult" value="{{ labtory_record.test_result if labtory_record else '' }}" disabled>
+                                    </div>
+                                </div>
+
+                                <!-- Units (e.g., mg/dL, g/L) -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="units" class="form-label">Units</label>
+                                        <input type="text" class="form-control" id="units" placeholder="Enter units (e.g., mg/dL, g/L)" name="Unit" value="{{ labtory_record.units if labtory_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- Reference Range (e.g., normal value range for a test) -->
+                                    <div class="mb-3">
+                                        <label for="referenceRange" class="form-label">Reference Range</label>
+                                        <input type="text" class="form-control" id="referenceRange" placeholder="Enter reference range (e.g., 70-100 mg/dL)" name="referenceRange" value="{{ labtory_record.reference_range if labtory_record else '' }}" disabled>
+                                    </div>
+
+                                    <!-- Test Date (Date and Time when the test was performed) -->
+                                    <div class="mb-3">
+                                        <label for="testDate" class="form-label">Test Date</label>
+                                        <input type="datetime-local" class="form-control" id="testDate" name="testDate" value="{{ labtory_record.test_date if labtory_record else '' }}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <!-- Status (e.g., Final, Preliminary) -->
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="lab-status" name="laboratoryStatus" disabled>
+                                            <option value="">Select Status</option>
+                                            <option value="Final" {{ 'selected' if labtory_record and labtory_record.laboratory_status == 'Final' else ''}}>Final</option>
+                                            <option value="Preliminary" {{ 'selected' if labtory_record and labtory_record.laboratory_status == 'Preliminary' else ''}}>Preliminary</option>
+                                            <option value="Amended" {{ 'selected' if labtory_record and labtory_record.laboratory_status == 'Amended' else ''}}>Amended</option>
+                                            <option value="Registered" {{ 'selected' if labtory_record and labtory_record.laboratory_status == 'Registered' else ''}}>Registered</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Test Interpretation (e.g., Normal, Abnormal) -->
+                                    <div class="mb-3">
+                                        <label for="interpretation" class="form-label">Interpretation</label>
+                                        <select class="form-select" id="interpretation" name="interpret" disabled>
+                                            <option value="">Select Interpretation</option>
+                                            <option value="Normal" {{ 'selected' if labtory_record and labtory_record.interpretation == 'Normal' else ''}}>Normal</option>
+                                            <option value="Abnormal" {{ 'selected' if labtory_record and labtory_record.interpretation == 'Abnormal' else ''}}>Abnormal</option>
+                                            <option value="Critical" {{ 'selected' if labtory_record and labtory_record.interpretation == 'Critical' else ''}}>Critical</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                        <!-- Notes (optional remarks on the laboratory observation) -->
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">Notes</label>
+                                            <textarea class="form-control" id="lab-notes" rows="3" placeholder="Any additional notes about the test" name="labNotes" disabled>{{ labtory_record.laboratory_notes if labtory_record else '' }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Buttons for Edit, Cancel, and Save -->
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Laboratory Records Table -->
+                                <div class="container patient-mt-4" id="laboratory_record_table">
+                                    <h4>Laboratory Records</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form action="{{ url_for('laboratory_records_table') + '#laboratory_record_table' }}" method="GET" style="display: inline;">
+                                                <label for="laboratory_entries">Entries:</label>
+                                                <select id="laboratory_entries" name="laboratory_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                    <option value="10" {% if laboratory_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if laboratory_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if laboratory_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                                </select>
+                                                <input type="hidden" name="laboratory_search" value="{{ laboratory_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="laboratory_search">Search:</label>
+                                            <form action="{{ url_for('laboratory_records_table') + '#laboratory_record_table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                <input type="text" id="laboratory_search" name="laboratory_search" class="form-control " placeholder="Search by Date (YYYY-MM-DD) | Test type" value="{{ laboratory_search_term }}">
+                                                     <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('laboratory_records_table', patient_id=patient.id) + '#laboratory_record_table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                <input type="hidden" name="laboratory_entries" value="{{ laboratory_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Test Type</th>
+                                                <th>Test Code</th>
+                                                <th>Test Result</th>
+                                                <th>Units</th>
+                                                <th>Reference Range</th>
+                                                <th>Test Date</th>
+                                                <th>Status</th>
+                                                <th>Interpretation</th>
+                                                <th>Notes</th>
+                                                <th>Last Updated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if laboratory_records %}
+                                            {% for rec_labtory in laboratory_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ rec_labtory.test_type if rec_labtory.test_type else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.test_code if rec_labtory.test_code else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.test_result if rec_labtory.test_result else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.units if rec_labtory.units else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.reference_range if rec_labtory.reference_range else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.test_date if rec_labtory.test_date else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.laboratory_status if rec_labtory.laboratory_status else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.interpretation if rec_labtory.interpretation else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.laboratory_notes if rec_labtory.laboratory_notes else 'N/A' }}</td>
+                                                <td>{{ rec_labtory.laboratory_updated_at.strftime('%Y-%m-%d %H:%M:%S') if rec_labtory.laboratory_updated_at else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_laboratory_record', laboratory_record_id=rec_labtory.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_laboratory_record', laboratory_record_id=rec_labtory.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="12" class="text-center">No radiology records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if laboratory_prev_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ laboratory_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                {% if page_num %}
+                                                <li class="page-item {% if page_num == pagination.laboratory_page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ url_for('laboratory_records_table', laboratory_page=page_num, patient_id=patient.id, laboratory_entries=laboratory_entries_per_page, laboratory_search=laboratory_search_term) + '#laboratory_record_table' }}">{{ page_num }}</a>
+                                                </li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                {% endif %}
+                                                {% endfor %}
+
+                                                {% if laboratory_next_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ laboratory_next_url }}">Next</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Tab -->
+                            <div class="tab-pane fade {% if active_tab == 'billing' %}show active{% endif %}" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                                <h3>Billing</h3>
+                                <form class="patient-form" method="POST" action="{{ url_for('billing', patient_id=patient.id) }}">
+                                    <input type="hidden" name="billing_record_id" id="billingRecordId" value="{{ billi_record.id if billi_record else '' }}">
+                                    <div class="row">
+                                        <div class="col-md-4">
+
+                                            <!-- Billing Date -->
+                                            <div class="mb-3">
+                                                <label for="billingDate" class="form-label">Billing Date</label>
+                                                <input type="date" class="form-control" id="billingDate" name="billingDate" value="{{ billi_record.billing_date if billi_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Charges -->
+                                            <div class="mb-3">
+                                                <label for="charges" class="form-label">Charges</label>
+                                                <input type="text" class="form-control" id="charges" placeholder="Enter total charges"  name="billingCharge" value="{{ billi_record.billing_charges if billi_record else '' }}" disabled>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <!-- Payment Method -->
+                                                <label for="paymentMethod" class="form-label">Payment Method</label>
+                                                <select class="form-select" id="paymentMethod" name="paymentMethod" disabled>
+                                                    <option value="">Select payment method</option>
+                                                    <option value="creditCard" {{ 'selected' if billi_record and billi_record.payment_method == 'creditCard' else ''}}>Credit Card</option>
+                                                    <option value="debitCard" {{ 'selected' if billi_record and billi_record.payment_method == 'debitCard' else ''}}>Debit Card</option>
+                                                    <option value="cash" {{ 'selected' if billi_record and billi_record.payment_method == 'cash' else ''}}>Cash</option>
+                                                    <option value="insurance" {{ 'selected' if billi_record and billi_record.payment_method == 'insurance' else ''}}>Insurance</option>
+                                                    <option value="other" {{ 'selected' if billi_record and billi_record.payment_method == 'other' else ''}}>Other</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <!-- Insurance Provider (If applicable) -->
+                                            <div class="mb-3" id="insuranceProviderGroup" style="display: {{ 'block' if billi_record and billi_record.payment_method == 'insurance' else 'none' }};">
+                                                <label for="insuranceProvider" class="form-label">Insurance Provider</label>
+                                                <input type="text" class="form-control" id="insuranceProvider" placeholder="Enter insurance provider name" name="insuranceProvider" value="{{ billi_record.insurance_provider if billi_record else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Insurance Claim Number -->
+                                            <div class="mb-3" id="insuranceClaimGroup" style="display: {{ 'block' if billi_record and billi_record.payment_method == 'insurance' else 'none' }};">
+                                                <label for="insuranceClaimNumber" class="form-label">Insurance Claim Number</label>
+                                                <input type="text" class="form-control" id="insuranceClaimNumber" placeholder="Enter insurance claim number" name="claimNumber" value="{{ billi_record.insurance_claim_number if billi else '' }}" disabled>
+                                            </div>
+
+                                            <!-- Payment Status -->
+                                            <div class="mb-3">
+                                                <label for="paymentStatus" class="form-label">Payment Status</label>
+                                                <select class="form-select" id="paymentStatus" name="paymentStatus" disabled>
+                                                    <option value="">Select payment status</option>
+                                                    <option value="paid" {{ 'selected' if billi_record and billi_record.payment_status == 'paid' else ''}}>Paid</option>
+                                                    <option value="pending" {{ 'selected' if billi_record and billi_record.payment_status == 'pending' else ''}}>Pending</option>
+                                                    <option value="overdue" {{ 'selected' if billi_record and billi_record.payment_status == 'overdue' else ''}}>Overdue</option>
+                                                    <option value="partiallyPaid" {{ 'selected' if billi_record and billi_record.payment_status == 'partiallyPaid' else ''}}>Partially Paid</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Billing Comments -->
+                                        <div class="mb-3">
+                                            <label for="billingComments" class="form-label">Billing Comments</label>
+                                            <textarea class="form-control" id="billingComments" rows="3" placeholder="Enter any additional billing-related comments" name="billComment" disabled>{{ billi_record.billing_comments if billi_record else '' }}</textarea>
+                                        </div>
+
+                                        <!-- Authorized By -->
+                                        <div class="mb-3">
+                                            <label for="authorizedBy" class="form-label">Authorized By</label>
+                                            <input type="text" class="form-control" id="authorizedBy" placeholder="Enter the name of the authorized person" value="{{ user.first_name }} {{ user.last_name}}" readonly disabled>
+                                        </div>
+
+                                        <!-- Notes -->
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">Additional Notes</label>
+                                            <textarea class="form-control" id="notes" rows="3" placeholder="Enter any additional notes" name="billNotes" disabled>{{ billi_record.billing_notes if billi_record else '' }}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Buttons for Edit, Cancel, and Save -->
+                                    <div class="button-container mt-3">
+                                        <button type="button" class="btn btn-primary edit-btn">Edit</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn" disabled>Cancel</button>
+                                        <button type="submit" class="btn btn-success save-btn" disabled>Save</button>
+                                    </div>
+                                </form>
+
+                                <!-- Billing Records Table -->
+                                <div class="container patient-mt-4" id="billing_record_table">
+                                    <h4>Billing Records</h4>
+
+                                    <!-- Search Bar -->
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div>
+                                            <form action="{{ url_for('billing_records_table') + '#billing_record_table' }}" method="GET" style="display: inline;">
+                                                <label for="billing_entries">Entries:</label>
+                                                <select id="billing_entries" name="billing_entries" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                    <option value="10" {% if billing_entries_per_page == 10 %}selected{% endif %}>10</option>
+                                                    <option value="25" {% if billing_entries_per_page == 25 %}selected{% endif %}>25</option>
+                                                    <option value="50" {% if billing_entries_per_page == 50 %}selected{% endif %}>50</option>
+                                                </select>
+                                                <input type="hidden" name="billing_search" value="{{ billing_search_term }}">
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                            <label for="billing_search">Search:</label>
+                                            <form action="{{ url_for('billing_records_table') + '#billing_record_table' }}" method="GET" style="display: inline;">
+                                                <div class="table-search-input-group">
+                                                <input type="text" id="billing_search" name="billing_search" class="form-control" placeholder="Search by Date (YYYY-MM-DD)" value="{{ billing_search_term }}">
+                                                    <button type="submit" class="btn btn-primary ms-2">Search</button>
+                                                    <a href="{{ url_for('billing_records_table', patient_id=patient.id) + '#billing_record_table' }}"
+                                                       class="btn btn-secondary ms-2">Clear</a>
+                                                </div>
+                                                <input type="hidden" name="patient_id" value="{{ patient.id }}">
+                                                <input type="hidden" name="billing_entries" value="{{ billing_entries_per_page }}">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Billing Date</th>
+                                                <th>Charges</th>
+                                                <th>Payment Method</th>
+                                                <th>Payment Status</th>
+                                                <th>Billing Comments</th>
+                                                <th>Authorized By</th>
+                                                <th>Notes</th>
+                                                <th>Last Updated</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% if billing_records %}
+                                            {% for rec_billi in billing_records %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ rec_billi.billing_date if rec_billi.billing_date else 'N/A' }}</td>
+                                                <td>{{ rec_billi.billing_charges if rec_billi.billing_charges else 'N/A' }}</td>
+                                                <td>{{ rec_billi.payment_method if rec_billi.payment_method else 'N/A'  }}</td>
+                                                <td>{{ rec_billi.payment_status if rec_billi.payment_status else 'N/A' }}</td>
+                                                <td>{{ rec_billi.billing_comments if rec_billi.billing_comments else 'N/A' }}</td>
+                                                <td>{{ user.first_name + ' ' + user.last_name if user.first_name and user.last_name else 'N/A' }}</td>
+                                                <td>{{ rec_billi.billing_notes if rec_billi.billing_notes else 'N/A' }}</td>
+                                                <td>{{ rec_billi.billing_updated_at.strftime('%Y-%m-%d %H:%M:%S') if rec_billi.billing_updated_at else 'N/A' }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <form action="{{ url_for('view_billing_record', billing_record_id=rec_billi.id) }}" method="GET">
+                                                            <button type="submit" class="btn pat-btn-view btn-sm">View</button>
+                                                        </form>
+
+                                                        <form action="{{ url_for('delete_billing_record', billing_record_id=rec_billi.id) }}" method="POST" style="display: inline;">
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            {% else %}
+                                            <tr>
+                                                <td colspan="10" class="text-center">No radiology records found for this patient.</td>
+                                            </tr>
+                                            {% endif %}
+                                            </tbody>
+                                        </table>
+
+                                        {% if pagination %}
+                                        <!-- Pagination -->
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+                                                {% if billing_prev_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ billing_prev_url }}">Previous</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                                {% endif %}
+
+                                                {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                                {% if page_num %}
+                                                <li class="page-item {% if page_num == pagination.billing_page %}active{% endif %}">
+                                                    <a class="page-link" href="{{ url_for('billing_records_table', billing_page=page_num, patient_id=patient.id, billing_entries=billing_entries_per_page, billing_search=billing_search_term) + '#billing_record_table' }}">{{ page_num }}</a>
+                                                </li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                {% endif %}
+                                                {% endfor %}
+
+                                                {% if billing_next_url %}
+                                                <li class="page-item"><a class="page-link" href="{{ billing_next_url }}">Next</a></li>
+                                                {% else %}
+                                                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='form_edit.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="{{ url_for('static', filename='patient_clinical.js') }}"></script>
+
+{% endblock %}

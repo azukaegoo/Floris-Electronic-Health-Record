@@ -67,25 +67,25 @@
 
                                             <!-- Weight -->
                                             <div class="mb-3">
-                                                <label for="weight" class="form-label">Weight</label>
+                                                <label for="weight" class="form-label">Weight(kg):</label>
                                                 <input type="text" class="form-control" id="weight" placeholder="Enter weight (kg)" name="weight" value="{{ vit_record.weight if vit_record else '' }}" disabled >
                                             </div>
 
                                             <!-- Blood Pressure -->
                                             <div class="mb-3">
-                                                <label for="bloodPressure" class="form-label">Blood Pressure</label>
+                                                <label for="bloodPressure" class="form-label">Blood Pressure(mmHg): </label>
                                                 <input type="text" class="form-control" id="bloodPressure" placeholder="Enter blood pressure (e.g., 120/80 mmHg)" name="bloodPressure" value="{{ vit_record.blood_pressure if vit_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Temperature -->
                                             <div class="mb-3">
-                                                <label for="temperature" class="form-label">Temperature</label>
+                                                <label for="temperature" class="form-label">Temperature:</label>
                                                 <input type="text" class="form-control" id="temperature"  placeholder="Enter temperature (°C)" name="temperature" value="{{ vit_record.temperature if vit_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Heart Rate -->
                                             <div class="mb-3">
-                                                <label for="heartRate" class="form-label">Heart Rate</label>
+                                                <label for="heartRate" class="form-label">Heart Rate(bpm):</label>
                                                 <input type="text" class="form-control" id="heartRate" placeholder="Enter heart rate (beats/min)" name="heartRate" value="{{ vit_record.heart_rate if vit_record else '' }}" disabled>
                                             </div>
                                         </div>
@@ -93,25 +93,25 @@
                                         <div class="col-md-4">
                                             <!-- Respiratory Rate -->
                                             <div class="mb-3">
-                                                <label for="respiratoryRate" class="form-label">Respiratory Rate</label>
+                                                <label for="respiratoryRate" class="form-label">Respiratory Rate:</label>
                                                 <input type="text" class="form-control" id="respiratoryRate" placeholder="Enter respiratory rate (breaths/min)" name="respiratoryRate" value="{{ vit_record.respiratory_rate if vit_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Oxygen Saturation -->
                                             <div class="mb-3">
-                                                <label for="oxygenSaturation" class="form-label">Oxygen Saturation</label>
+                                                <label for="oxygenSaturation" class="form-label">Oxygen Saturation(%)</label>
                                                 <input type="text" class="form-control" id="oxygenSaturation"  placeholder="Enter oxygen saturation (%)" name="oxygenSaturation" value="{{ vit_record.oxygen_saturation if vit_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Blood Glucose Level -->
                                             <div class="mb-3">
-                                                <label for="bloodGlucose" class="form-label">Blood Glucose Level</label>
+                                                <label for="bloodGlucose" class="form-label">Blood Glucose Level(mg/dL):</label>
                                                 <input type="text" class="form-control" id="bloodGlucose" placeholder="Enter blood glucose (mg/dL)" name="bloodGlucose" value="{{ vit_record.blood_glucose if vit_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Pulse Oximetry -->
                                             <div class="mb-3">
-                                                <label for="pulseOximetry" class="form-label">Pulse Oximetry</label>
+                                                <label for="pulseOximetry" class="form-label">Pulse Oximetry(%)</label>
                                                 <input type="text" class="form-control" id="pulseOximetry"  placeholder="Enter pulse oximetry (%)" name="pulseOximetry" value="{{ vit_record.pulse_oximetry if vit_record else '' }}" disabled>
                                             </div>
                                         </div>
@@ -191,14 +191,14 @@
                                             <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Weight</th>
-                                                <th>Blood Pressure</th>
+                                                <th>Weight(kg)</th>
+                                                <th>Blood Pressure(mmHg)</th>
                                                 <th>Temperature</th>
-                                                <th>Heart Rate</th>
+                                                <th>Heart Rate(bpm)</th>
                                                 <th>Respiratory Rate</th>
-                                                <th>Oxygen Saturation</th>
-                                                <th>Blood Glucose</th>
-                                                <th>Pulse Oximetry</th>
+                                                <th>Oxygen Saturation(%)</th>
+                                                <th>Blood Glucose(mg/dL)</th>
+                                                <th>Pulse Oximetry(%)</th>
                                                 <th>Measurement Date and Time</th>
                                                 <th>Status</th>
                                                 <th>Notes</th>

@@ -4,19 +4,66 @@
 
 {% block content %}
     <!-- Hero Section with Overlay -->
-    <div class="contact-hero-section">
-        <div class="contact-overlay">
-            <div class="contact-heading-text">
-                <h1>ABOUT US</h1>
+    <div class="about-hero-section">
+        <div class="about-overlay">
+            <div class="about-heading-text">
+                <h1>ABOUT FLORIS</h1>
             </div>
         </div>
     </div>
 
-        <div class="row justify-content-center">
+        <div class="about-row justify-content-center">
             <div class="col-md-6 contact-faq-contact-section">
-                <p>We continuously search the internet and identify the best sources, from academic research to Reddit threads,
-                    to provide the perfect answer to any question.</p>
+                <p style="margin-bottom: 3rem; text-align: justify;">Floris is an electronic health record (EHR) system designed to simplify how doctors manage patient information.
+                    By offering an easy-to-use platform, Floris enables doctors and clinics to securely access, update, and organize records,
+                    improving efficiency and enhancing patient care.
+                </p>
+
+                <h3 style="text-align: center; font-weight: bold;">Key Features</h3>
+                <p style="text-align: justify;">
+                   Streamlined patient management that allows healthcare providers to manage medical histories, laboratory records,
+                    radiology images, and vital signs, medication, billing, patient profile which also include emergency contact integration for ensuring timely communication in urgent situations in one centralized system.
+                    This integration simplifies access to important patient information
+                </p >
+
+                <p style="text-align: justify;">
+                    Doctor-focused design where the EHR is built with the needs of doctors in mind, prioritizing ease of use and efficiency in tracking patient care.
+                    This focus helps users navigate the system quickly and effectively.
+                </p>
+
+                <p style="text-align: justify;">
+                    Standard-based development designed with references from healthcare standards like FHIR (Fast Healthcare Interoperability Resources),
+                    ensuring reliability and relevance in modern healthcare practices.
+                </p>
+
+                <p style="text-align: justify; margin-bottom: 3rem;">
+                    File management and access controls where the system strict access control to ensure that doctors can only view or modify patients they added and provides secure pathways for storing and managing radiology images, laboratory results, and other records.
+                </p>
+
+
+                <h3 style="text-align: center; font-weight: bold;">Benefits</h3>
+                <p style="text-align: justify; margin-bottom: 3rem;">
+                    Floris is designed to simplify the doctor practice by saving time with its clean and straight forward user interface, helps doctor focus
+                    more on patient care with its easy-to-use navigation for managing clinical documentation.
+                </p>
+
+                <h3 style="text-align: center; font-weight: bold;">Our Mission</h3>
+                <p style="text-align: justify; margin-bottom: 3rem;">
+                    At Floris, our mission is to support doctors by providing a user friendly tool that saves time and enhances the quality of patient care.
+                </p>
+
+                <h3 style="text-align: center; font-weight: bold;">Contact Us</h3>
+                <p style="text-align: justify; margin-bottom: 3rem;">
+                    If you have any questions, need assistance, or want to share feedback, you can use the
+                    <a href="{{ url_for('contact_us') }}#contactForm">contact form</a> on our contact us page or send us an email at
+                    <a href="mailto:floriselectronichealthrecord@gmail.com">support@florisehr.com</a>
+                </p>
+
+
             </div>
         </div>
-
+      <!-- Footer Section -->
+   <footer class="about-footer">
+       <p>&copy; 2025 Floris.</p>
+   </footer>
 {% endblock %}

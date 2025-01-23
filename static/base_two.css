@@ -423,3 +423,35 @@ padding-top: 7px;
     width: 100%;
     align-items: baseline;
 }
+.nav-pills {
+    --bs-nav-link-color: #dee2e6; /* Default text color */
+    --bs-nav-pills-border-radius: var(--bs-border-radius);
+    --bs-nav-pills-link-active-color: #ffffff;
+    --bs-nav-pills-link-active-bg: #dc3545; /* Background for active pill */
+    --bs-border-radius: 0rem; /* Keeps border-radius at zero */
+    padding-bottom: 32px;
+}
+
+.nav-pills .nav-link {
+    margin-right: 3px;
+    margin-bottom: 8px;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    color: #fff;
+    background-color: #45656b;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+.nav-pills .nav-link:hover {
+    background-color: #b02a37; /* Background color on hover */
+    color: #ffffff; /* Change text color on hover */
+    border-color: #b02a37; /* Border color on hover */
+}
+
+.nav-pills .nav-link.active {
+    border-color: #dc3545; /* Border color for active pill */
+    background-color: #dc3545; /* Background color for active pill */
+    color: #ffffff; /* Text color for active pill */
+}
+

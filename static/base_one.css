@@ -208,6 +208,20 @@ gap: 9px;
 .invalid {
     color: red;
 }
+.footer {
+    position: absolute; /* Position relative to .index-overlay */
+    bottom: 0; /* Stick to the bottom of the overlay */
+    width: 100%; /* Full width of the overlay */
+    background-color: rgba(0, 0, 0, 0.15); /* Semi-transparent black background */
+    color: #adb7bc;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9rem;
+}
+
+.footer p {
+    margin: 0; /* Remove default margin */
+}
 
 
 
@@ -215,7 +229,7 @@ gap: 9px;
 /* CONTACT PAGE STYLES                      */
 /* ---------------------------------------- */
 .contact-hero-section {
-    height: 60vh;
+    height: 75vh;
     background: url('/static/images/markus-spiske-R_An1zMmGwg-unsplash.jpg') no-repeat center center;
     background-size: cover;
     position: relative;
@@ -227,7 +241,7 @@ gap: 9px;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -250,6 +264,7 @@ gap: 9px;
     border-radius: 8px;
     padding: 30px;
     margin-top: 17px;
+    margin-bottom: 25px;
 }
 .contact-btn-faq {
     background-color: #4d828b;
@@ -266,6 +281,20 @@ gap: 9px;
     border: none;
     background-color: #4d828b;
     color: white;
+}
+.contact-footer {
+    background-color: #4d828b; /* Match header background color */
+    color: white; /* White text */
+    text-align: center; /* Center text horizontally */
+    padding: 15px 0; /* Add vertical padding */
+    position: relative; /* Positioning context */
+    width: 100%; /* Full width of the container */
+    margin-top: 2rem;
+}
+
+.contact-footer p {
+    margin: 0; /* Remove default margin */
+
 }
 
 /*forget password html */
@@ -290,52 +319,106 @@ gap: 9px;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-    .floating-help {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        background-color: #2c3e50;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+.floating-help {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: #2c3e50;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .floating-help:hover {
-        background-color: #b02a37;
-    }
+.floating-help:hover {
+    background-color: #b02a37;
+}
 
-    .popover-body h6 {
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
+.popover-body h6 {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
 
-    .popover-body ul {
-        padding-left: 0;
-    }
+.popover-body ul {
+    padding-left: 0;
+}
 
-    .popover-body ul li {
-        list-style-type: none;
-        margin-bottom: 0.5rem;
-    }
+.popover-body ul li {
+    list-style-type: none;
+    margin-bottom: 0.5rem;
+}
 
-    .popover-body ul li a {
-        text-decoration: none;
-        color: #2c3e50;
-    }
+.popover-body ul li a {
+    text-decoration: none;
+    color: #2c3e50;
+}
 
-    .popover-body ul li a:hover {
-        text-decoration: underline;
-    }
+.popover-body ul li a:hover {
+    text-decoration: underline;
+}
+
+
+/* ABOUT HTML */
+.about-footer {
+    background-color: #4d828b; /* Match header background color */
+    color: white; /* White text */
+    text-align: center; /* Center text horizontally */
+    padding: 15px 0; /* Add vertical padding */
+    position: relative; /* Positioning context */
+    width: 100%; /* Full width of the container */
+    margin-top: 2rem;
+}
+
+.about-footer p {
+    margin: 0; /* Remove default margin */
+
+}
+.about-hero-section {
+    height: 75vh;
+    background: url('/static/images/national-cancer-institute-NFvdKIhxYlU-unsplash.jpg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+.about-hero-section .about-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.about-heading-text h1 {
+    font-size: 5rem;
+    font-family: 'Anta';
+    color: #adb7bc;
+    letter-spacing: 27px;
+    text-align: center;
+}
+.about-row {
+    --bs-gutter-x: 0.4rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+}

@@ -57,7 +57,7 @@
 
                                  <div class="mb-3">
                                      <label for="languagePreferred" class="form-label mt-2">Language Preferred:</label>
-                                     <input type="text" class="form-control" id="languagePreferred" name="language_preferred" value="{{ patient.language_preferred }}" disabled>
+                                     <input type="text" class="form-control" id="languagePreferred" name="language_preferred" value="{{ patient.language_preferred }}" required placeholder="Enter prefered language"disabled>
                                  </div>
 
                                  <div class="mb-3">
@@ -67,12 +67,12 @@
 
                                  <div class="mb-3">
                                      <label for="middleName" class="form-label mt-2">Middle Name:</label>
-                                     <input type="text" class="form-control" id="middleName" name="middle_name" value="{{ patient.middle_name }}" disabled>
+                                     <input type="text" class="form-control" id="middleName" name="middle_name" value="{{ patient.middle_name }}" required placeholder="Enter middle name" disabled>
                                  </div>
 
                                  <div class="mb-3">
                                      <label for="lastName" class="form-label mt-2">Last Name:</label>
-                                     <input type="text" class="form-control" id="lastName" name="last_name" value="{{ patient.last_name }}" disabled>
+                                     <input type="text" class="form-control" id="lastName" name="last_name" value="{{ patient.last_name }}" required placeholder="Enter last name" disabled>
                                  </div>
                              </div>
 
@@ -174,22 +174,22 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="languagePreferred" class="form-label mt-2">Language Preferred:</label>
-                                    <input type="text" class="form-control" id="Emergency_languagePreferred" name="emergency_language_preferred" value="{{ emergency_contact.language_preferred if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="Emergency_languagePreferred" name="emergency_language_preferred" value="{{ emergency_contact.language_preferred if emergency_contact else '' }}" required placeholder="Enter preferred language" disabled>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="firstName" class="form-label">First Name:</label>
-                                    <input type="text" class="form-control" id="Emergency_firstName" name="emergency_first_name" value="{{ emergency_contact.first_name if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="Emergency_firstName" name="emergency_first_name" value="{{ emergency_contact.first_name if emergency_contact else '' }}" required placeholder="Enter first name" disabled>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="middleName" class="form-label mt-2">Middle Name:</label>
-                                    <input type="text" class="form-control" id="Emergency_middleName" name="emergency_middle_name" value="{{ emergency_contact.middle_name if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="Emergency_middleName" name="emergency_middle_name" value="{{ emergency_contact.middle_name if emergency_contact else '' }}" required placeholder="Enter middle name" disabled>
                                 </div>
 
                                  <div class="mb-3">
                                     <label for="lastName" class="form-label mt-2">Last Name:</label>
-                                    <input type="text" class="form-control" id="Emergency_lastName" name="emergency_last_name" value="{{ emergency_contact.last_name if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="Emergency_lastName" name="emergency_last_name" value="{{ emergency_contact.last_name if emergency_contact else '' }}" required placeholder="Enter last name" disabled>
                                 </div>
                             </div>
 
@@ -208,12 +208,12 @@
 
                                 <div class="mb-3">
                                     <label for="relation" class="form-label">Relation:</label>
-                                    <input type="text" class="form-control" id="relation" name="emergency_relation" value="{{ emergency_contact.relation if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="relation" name="emergency_relation" value="{{ emergency_contact.relation if emergency_contact else '' }}" required placeholder="Enter relation" disabled>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="age" class="form-label">Age:</label>
-                                    <input type="text" class="form-control" id="Emergency_age" name="emergency_age" value="{{ emergency_contact.age if emergency_contact else '' }}" disabled>
+                                    <input type="text" class="form-control" id="Emergency_age" name="emergency_age" value="{{ emergency_contact.age if emergency_contact else '' }}" required placeholder="Enter age" disabled>
                                 </div>
 
                                 <div class="mb-3">
@@ -235,6 +235,10 @@
                                 <div class="mb-3">
                                     <label for="address" class="form-label mt-2">Address:</label>
                                     <textarea class="form-control" id="Emergency_address" rows="3" name="emergency_address" disabled>{{ emergency_contact.address if emergency_contact else '' }}</textarea>
+                                </div>
+                                 <div class="mb-3">
+                                    <label for="validityContact" class="form-label mt-2">Email:</label>
+                                    <input type="text" class="form-control" id="validityContact" name="validityContact" value="{{ emergency_contact.validity_of_contact if emergency_contact else '' }}" disabled>
                                 </div>
                             </div>
                         </div>

@@ -196,6 +196,7 @@ class PatientEmergencyContact(db.Model):
     phone_number = db.Column(db.String(15))
     email = db.Column(db.String(100))
     address = db.Column(db.Text)
+    validity_of_contact = db.Column(db.String(20), nullable=True)
 
     # Back reference to Patient
     patient = db.relationship('Patient', back_populates='pat_emergency_contact')

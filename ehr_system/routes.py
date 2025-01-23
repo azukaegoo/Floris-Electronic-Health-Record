@@ -156,7 +156,6 @@ def register_routes(app):
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
-        print("Session before login: ", session)
 
         if request.method == 'POST':
             username = request.form['username']
@@ -637,6 +636,7 @@ def register_routes(app):
                 emergency_phone_number = request.form.get('emergency_phone_number')
                 emergency_email = request.form.get('emergency_email')
                 emergency_address = request.form.get('emergency_address')
+                emergency_validity_of_contact = request.form.get('validityContact')
 
                 # Handle profile picture
                 photo_filename = None
@@ -692,6 +692,7 @@ def register_routes(app):
                         emergency_contact.phone_number = emergency_phone_number
                         emergency_contact.email = emergency_email
                         emergency_contact.address = emergency_address
+                        emergency_contact.validity_of_contact = emergency_validity_of_contact
                     else:
                         new_emergency_contact = PatientEmergencyContact(
                             patient_id=patient.id,
@@ -705,7 +706,8 @@ def register_routes(app):
                             relation=emergency_relation,
                             phone_number=emergency_phone_number,
                             email=emergency_email,
-                            address=emergency_address
+                            address=emergency_address,
+                            validity_of_contact=emergency_validity_of_contact
                         )
                         db.session.add(new_emergency_contact)
                     flash('Patient and emergency contact updated successfully!', 'add_or_edit_patient')
@@ -747,7 +749,8 @@ def register_routes(app):
                         relation=emergency_relation,
                         phone_number=emergency_phone_number,
                         email=emergency_email,
-                        address=emergency_address
+                        address=emergency_address,
+                        validity_of_contact=emergency_validity_of_contact
                     )
                     db.session.add(new_emergency_contact)
                     flash('Patient and emergency contact added successfully!', 'add_or_edit_patient')
@@ -1771,7 +1774,7 @@ def register_routes(app):
         db.session.commit()
         flash('Billing record successfully deleted', 'delete_billing_record')
         return redirect(url_for('billing', patient_id=rec_billi.patient_id,
-                                active_tab=active_tab) + '#billing_record_table')
+                                active_tab=active_tab))
 
     @app.route('/billing-records-table', methods=['GET', 'POST'])
     @login_required
@@ -2044,38 +2047,23 @@ def register_routes(app):
         # Fetch the patient
         patient = Patient.query.filter_by(id=patient_id, doctor_id=current_user.id).first_or_404()
 
-        # Start building the query for vital records
-        radiology_query = PatientRadiology.query.join(Patient).filter(Patient.doctor_id == current_user.id)
+        # Start building the query for radiology records
+        radiology_query = PatientRadiology.query.filter(PatientRadiology.patient_id == patient.id)
 
         # Apply search filter if there's a search term
         if radiology_search_term:
-            result_search = False
-            try:
-                radiology_query = radiology_query.filter(
-                    db.or_(
-                        db.cast(PatientRadiology.updated_at, db.String).ilike(f"%{radiology_search_term}%"),
-                        db.cast(PatientRadiology.procedure_date, db.String).ilike(f"%{radiology_search_term}%")
-                    )
+            radiology_query = radiology_query.filter(
+                db.or_(
+                    PatientRadiology.radiology_procedure.ilike(f"%{radiology_search_term}%"),
+                    db.cast(PatientRadiology.updated_at, db.String).ilike(f"%{radiology_search_term}%"),
+                    db.cast(PatientRadiology.procedure_date, db.String).ilike(f"%{radiology_search_term}%")
                 )
-                result = radiology_query.all()
-                if result:
-                    result_search = True
-            except ValueError:
-                pass
-
-                if not result_search:
-                    radiology_query = radiology_query.filter(
-                        PatientRadiology.radiology_procedure.ilike(f"%{radiology_search_term}%"))
-                    result = radiology_query.all()
-                    if not result:
-                        flash("No records found for the given date.", "radiology_records_table")
-                        return redirect(url_for('radiology_records_table', patient_id=patient_id,
-                                                radiology_entries=radiology_entries_per_page)
-                                        + '#radiology_record_table')
+            )
 
         # Paginate the results
         radiology_records = radiology_query.paginate(page=radiology_page, per_page=radiology_entries_per_page,
                                                      error_out=False)
+
         # Validate page number
         if radiology_page > radiology_records.pages > 0:
             flash("Requested page does not exist. Redirecting to the first page", "radiology_records_table")
@@ -2099,7 +2087,7 @@ def register_routes(app):
             'patient_clinical.html',
             user=user,
             patient=patient,
-            radiology_records=radiology_records.items,  # List of vital records for the current page
+            radiology_records=radiology_records.items,  # List of radiology records for the current page
             pagination=radiology_records,  # Pass the pagination object
             radiology_next_url=radiology_next_url,
             radiology_prev_url=radiology_prev_url,

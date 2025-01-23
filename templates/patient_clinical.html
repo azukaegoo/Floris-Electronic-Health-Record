@@ -1177,7 +1177,7 @@
                                             <!-- Insurance Claim Number -->
                                             <div class="mb-3" id="insuranceClaimGroup" style="display: {{ 'block' if billi_record and billi_record.payment_method == 'insurance' else 'none' }};">
                                                 <label for="insuranceClaimNumber" class="form-label">Insurance Claim Number</label>
-                                                <input type="text" class="form-control" id="insuranceClaimNumber" placeholder="Enter insurance claim number" name="claimNumber" value="{{ billi_record.insurance_claim_number if billi else '' }}" disabled>
+                                                <input type="text" class="form-control" id="insuranceClaimNumber" placeholder="Enter insurance claim number" name="claimNumber" value="{{ billi_record.insurance_claim_number if billi_record else '' }}" disabled>
                                             </div>
 
                                             <!-- Payment Status -->

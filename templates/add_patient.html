@@ -260,11 +260,11 @@
             {% if patient %}
             <form action="{{ url_for('clinical', patient_id=patient.id) }}" method="GET">
             <button type="submit" class="btn btn-outline-primary" id="proceedToLogButton">
-                Proceed to Clinical
+                Proceed to Patient Clinical
             </button>
         </form>
         {% else %}
-            <button type="button" disabled>Please save the patient before proceeding</button>
+            <button type="button" disabled>Please save the patient information before proceeding</button>
         {% endif %}
     </div>
 </div>

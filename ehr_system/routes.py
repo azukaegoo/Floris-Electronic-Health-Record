@@ -566,6 +566,7 @@ def register_routes(app):
                     Patient.middle_name.ilike(f"%{search_term}%"),
                     Patient.last_name.ilike(f"%{search_term}%"),
                     Patient.patient_id.ilike(f"%{search_term}%"),
+                    db.cast(Patient.created_at, db.String).ilike(f"%{search_term}%")
                 )
             )
 
@@ -789,6 +790,9 @@ def register_routes(app):
                                medic_record=PatientMedicalHistory.query.filter_by(patient_id=patient.id).all(),
                                active_tab=active_tab
                                )
+    # Note the return repeated query record filter for all patient clinical route is not a redundancy, the tabs
+    # are alternated from route, removing repeated query will cause the record
+    # not to display when alternating between tabs
 
     @app.route('/patient/<int:patient_id>/vitals', methods=['GET', 'POST'])
     @login_required

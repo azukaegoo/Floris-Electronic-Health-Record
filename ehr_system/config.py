@@ -10,10 +10,10 @@ class Config:
     PERMANENT_SESSION_LIFETIME = 1800  # 30 minutes in seconds
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_USERNAME = 'floriselectronichealthrecord@gmail.com'  # Gmail account
-    MAIL_PASSWORD = 'cxig yqvv cvsn iggc'  # generated App Password
-    MAIL_PORT = 465  # Use 465 for SSL
-    MAIL_USE_TLS = False  # Setting this to False
-    MAIL_USE_SSL = True  # Setting this to true
+    MAIL_PASSWORD = 'the app password generated'  # generated App Password
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
 
     # SQLAlchemy configuration
     SQLALCHEMY_DATABASE_URI = 'sqlite:///users.db'  # Local SQLite database

@@ -40,7 +40,46 @@ The Floris EHR System is a user-friendly and efficient platform designed to simp
 - **Prerequisites**:
   - Python 3.11+
   - Required Python dependencies (listed in `requirements.txt`).
-  - 
+
+### How to Run or Test This EHR System on Your Local Machine
+
+- Clone this repository and change into the cloned directory using your terminal:
+
+- Create and activate a virtual environment:
+  ```bash
+  python -m venv venv
+  ```
+
+  - For macOS/Linux:
+    ```bash
+    source venv/bin/activate
+    ```
+
+  - For Windows:
+    ```bash
+    venv\Scripts\activate
+    ```
+
+- Install all the dependencies listed in the `requirements.txt` file:
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+- Make sure you are in the project folder, then start the app with:
+  ```bash
+  flask run
+  ```
+
+- After running, Flask will give you a local address like:
+  ```
+  http://127.0.0.1:5000
+  ```
+
+- Click on the link or copy it into your browser.  
+  Now you are ready to explore the Floris EHR system!
+
+
+
 
 
 Note the return repeated query record filter for all patient clinical route is not a redundancy but done purposely because the tabs
